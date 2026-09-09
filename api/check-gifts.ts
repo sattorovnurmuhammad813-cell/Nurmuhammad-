@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { getAllTracked, getGiftState, setGiftState } from "../lib/store";
-import { getGiftCatalog } from "../lib/gifts";
+import { getGiftCatalog, getCheapestListingLink } from "../lib/gifts";
 import { sendMessage } from "../lib/botApi";
 import { getConfiguredBots } from "../lib/bots";
 
@@ -59,13 +59,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
         if (shouldNotify) {
           const title = gift?.title ?? t.title;
+          const link = await getCheapestListingLink(t.giftId);
           await sendMessage(
             bot.token,
             t.chatId,
             `🎁 <b>${escapeHtml(title)}</b>\n` +
               `Bozordagi eng arzon narx: <b>${floor} ⭐</b>\n` +
               `Sizning chegarangiz: ${t.min}-${t.max} ⭐\n\n` +
-              `Telegram → Sovg'alar → Resale bo'limidan tez tekshiring!`
+              (link
+                ? `Tez bo'ling, pastdagi tugma orqali ko'ring!`
+                : `Telegram → Sovg'alar → Resale bo'limidan tez tekshiring!`),
+            link ? [{ text: "🎁 View Collectible", url: link }] : undefined
           );
           notified++;
         }

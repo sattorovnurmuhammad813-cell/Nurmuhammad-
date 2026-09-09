@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@upstash/redis": "^1.34.3",
+    "big-integer": "^1.6.52",
     "teleproto": "^1.229.0"
   },
   "devDependencies": {

@@ -1,4 +1,5 @@
 import { Api } from "teleproto";
+import bigInt from "big-integer";
 import { getClient } from "./telegramClient";
 
 export interface CatalogGift {
@@ -54,4 +55,33 @@ export async function getFloorPrice(giftId: string): Promise<number | null> {
   const catalog = await getGiftCatalog();
   const gift = catalog.find((g) => g.id === giftId);
   return gift?.resellMinStars ?? null;
+}
+
+/**
+ * Bozordagi eng arzon (floor) taklifning "View Collectible" havolasini oladi
+ * (Telegram'ning t.me/nft/<slug> formatidagi to'g'ridan-to'g'ri havolasi).
+ * Topilmasa yoki xatolik bo'lsa null qaytaradi - bu holatda xabar link'siz yuboriladi.
+ */
+export async function getCheapestListingLink(giftId: string): Promise<string | null> {
+  try {
+    const client = await getClient();
+    const result = await client.invoke(
+      new Api.payments.GetResaleStarGifts({
+        giftId: bigInt(giftId),
+        sortByPrice: true,
+        offset: "",
+        limit: 1,
+      } as any)
+    );
+
+    if (result.className !== "payments.ResaleStarGifts") return null;
+
+    const first = result.gifts[0];
+    if (!first || first.className !== "StarGiftUnique") return null;
+
+    return `https://t.me/nft/${first.slug}`;
+  } catch (err) {
+    console.error(`getCheapestListingLink(${giftId}) xatosi:`, err);
+    return null;
+  }
 }

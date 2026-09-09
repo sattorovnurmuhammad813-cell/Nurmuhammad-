@@ -1,4 +1,14 @@
-export async function sendMessage(token: string, chatId: number | string, text: string): Promise<void> {
+export interface UrlButton {
+  text: string;
+  url: string;
+}
+
+export async function sendMessage(
+  token: string,
+  chatId: number | string,
+  text: string,
+  buttons?: UrlButton[]
+): Promise<void> {
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -7,6 +17,9 @@ export async function sendMessage(token: string, chatId: number | string, text: 
       text,
       parse_mode: "HTML",
       disable_web_page_preview: true,
+      ...(buttons?.length
+        ? { reply_markup: { inline_keyboard: [buttons.map((b) => ({ text: b.text, url: b.url }))] } }
+        : {}),
     }),
   });
 
