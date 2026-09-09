@@ -8,6 +8,7 @@
  * Ishga tushirish: npm run session:qr
  */
 import * as readline from "readline";
+import { exec } from "child_process";
 import { TelegramClient } from "teleproto";
 import { StringSession } from "teleproto/sessions";
 
@@ -18,6 +19,19 @@ function ask(question: string): Promise<string> {
       rl.close();
       resolve(answer.trim());
     });
+  });
+}
+
+function openInBrowser(url: string): void {
+  const platform = process.platform;
+  const cmd =
+    platform === "win32"
+      ? `start "" "${url}"`
+      : platform === "darwin"
+        ? `open "${url}"`
+        : `xdg-open "${url}"`;
+  exec(cmd, (err) => {
+    if (err) console.error("Brauzerni avtomatik ochib bo'lmadi:", err.message);
   });
 }
 
@@ -40,15 +54,18 @@ async function main() {
     {
       qrCode: async (code) => {
         const token = code.token.toString("base64url");
-        const url = `tg://login?token=${token}`;
+        const tgUrl = `tg://login?token=${token}`;
+        const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(tgUrl)}`;
+
         console.log("\n=============================================");
-        console.log("Telegram ilovangizni oching:");
-        console.log("Sozlamalar -> Qurilmalar (Devices) -> Qurilma ulash (Link Desktop Device)");
-        console.log("va shu havolani ochib bering (nusxalab, brauzer manzil");
-        console.log("qatoriga joylashtirib Enter bosing - Telegram avtomatik ochadi):\n");
-        console.log(url);
-        console.log("\n(Havola ~30 soniyada eskiradi, eskirsa avtomatik yangisi chiqadi)");
+        console.log("Brauzerda QR-kod avtomatik ochilmoqda...");
+        console.log("DARHOL telefoningizda: Telegram -> Sozlamalar -> Qurilmalar");
+        console.log("-> Qurilma ulash (Link Desktop Device) -> kamerani ekrandagi");
+        console.log("QR-kodga qarating!");
+        console.log("(Agar brauzer ochilmasa, shu havolani qo'lda oching: " + qrImageUrl + ")");
         console.log("=============================================\n");
+
+        openInBrowser(qrImageUrl);
       },
       password: async (hint) => ask(`Ikki bosqichli parol${hint ? ` (eslatma: ${hint})` : ""}: `),
       onError: async (err) => {
