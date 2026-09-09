@@ -35,10 +35,20 @@ async function main() {
     connectionRetries: 5,
   });
 
+  const forceSMS = process.env.FORCE_SMS === "1";
+
   await client.start({
     phoneNumber: async () => ask("Telefon raqamingiz (+998...): "),
     password: async () => ask("Ikki bosqichli parol (bo'lmasa bo'sh qoldiring): "),
-    phoneCode: async () => ask("Telegram orqali kelgan tasdiqlash kodi: "),
+    phoneCode: async (isCodeViaApp) => {
+      console.log(
+        isCodeViaApp
+          ? "\n(Kod Telegram ilovasi ichida - 'Telegram' nomli maxsus xabar sifatida yuborildi)"
+          : "\n(Kod SMS xabar sifatida yuborildi - Xabarlar ilovasini tekshiring)"
+      );
+      return ask("Tasdiqlash kodi: ");
+    },
+    forceSMS,
     onError: (err) => console.error(err),
   });
 
