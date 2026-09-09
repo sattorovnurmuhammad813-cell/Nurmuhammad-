@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendMessage } from "./botApi";
-import { getGiftCatalog } from "./gifts";
+import { getGiftCatalog, getCheapestListingLink } from "./gifts";
 import { addTracked, removeTracked, listTrackedForChat } from "./store";
 import type { BotConfig } from "./bots";
 
@@ -115,11 +115,15 @@ async function handleTrack(bot: BotConfig, chatId: number, text: string): Promis
   }
 
   await addTracked(bot.id, chatId, giftId, gift.title, min, max);
+
+  const link = gift.resellMinStars != null ? await getCheapestListingLink(giftId) : null;
+
   await sendMessage(
     bot.token,
     chatId,
     `✅ Kuzatuvga qo'shildi: <b>${escapeHtml(gift.title)}</b> (${min}-${max} ⭐)\n` +
-      `Hozirgi floor narx: ${gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q"}`
+      `Hozirgi floor narx: ${gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q"}`,
+    link ? [{ text: "🎁 View Collectible", url: link }] : undefined
   );
 }
 
