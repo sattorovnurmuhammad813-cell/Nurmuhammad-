@@ -1,0 +1,24 @@
+{
+  "name": "giftaniqlivchi-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Telegram collectible sovg'alar (gift) bozorida narx tushishini kuzatuvchi bot",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "session": "ts-node scripts/generate-session.ts"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.34.3",
+    "teleproto": "^1.229.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@vercel/node": "^3.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
