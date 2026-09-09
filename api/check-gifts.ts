@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getAllTracked, getGiftState, setGiftState } from "../lib/store";
-import { getGiftCatalog, getCheapestListing } from "../lib/gifts";
+import { getAllTracked, getNotifiedSlugs, markSlugsNotified } from "../lib/store";
+import { getListingsInRange } from "../lib/gifts";
 import { sendMessage } from "../lib/botApi";
 import { getConfiguredBots } from "../lib/bots";
 
@@ -30,10 +30,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       return;
     }
 
-    // Sovg'alar katalogi barcha botlar uchun umumiy - bitta marta olamiz
-    const catalog = await getGiftCatalog(true);
-    const floorById = new Map(catalog.map((g) => [g.id, g]));
-
     let checked = 0;
     let notified = 0;
 
@@ -42,50 +38,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       checked += tracked.length;
 
       for (const t of tracked) {
-        const gift = floorById.get(t.giftId);
-        const floor = gift?.resellMinStars ?? null;
+        const listings = await getListingsInRange(t.giftId, t.min, t.max);
+        if (listings.length === 0) continue;
 
-        if (floor == null) {
-          // Sovg'a hozircha resale bozorida yo'q - narx bo'lmagani uchun o'tkazib yuboramiz
-          continue;
-        }
+        const alreadyNotified = await getNotifiedSlugs(bot.id, t.chatId, t.giftId);
+        const newListings = listings.filter((l) => !alreadyNotified.has(l.slug));
+        if (newListings.length === 0) continue;
 
-        const inRange = floor >= t.min && floor <= t.max;
-        const prevState = await getGiftState(bot.id, t.chatId, t.giftId);
-
-        // Faqat "diapazonga yangi kirganda" yoki "diapazon ichida narx o'zgarganda" xabar beramiz,
-        // har daqiqa bir xil narxni qayta-qayta yubormaslik uchun.
-        const shouldNotify = inRange && (!prevState?.lastInRange || prevState.lastPrice !== floor);
-
-        if (shouldNotify) {
-          const title = gift?.title ?? t.title;
-          const listing = await getCheapestListing(t.giftId);
-
-          const attrLines = listing
-            ? [
-                listing.model && `Model: ${escapeHtml(listing.model)}`,
-                listing.symbol && `Symbol: ${escapeHtml(listing.symbol)}`,
-                listing.backdrop && `Backdrop: ${escapeHtml(listing.backdrop)}`,
-              ].filter(Boolean)
-            : [];
+        for (const listing of newListings) {
+          const attrLines = [
+            listing.model && `Model: ${escapeHtml(listing.model)}`,
+            listing.symbol && `Symbol: ${escapeHtml(listing.symbol)}`,
+            listing.backdrop && `Backdrop: ${escapeHtml(listing.backdrop)}`,
+          ].filter(Boolean);
 
           const text =
-            `🎁 <b>${escapeHtml(title)}</b>${listing ? ` #${listing.num}` : ""}\n` +
+            `🎁 <b>${escapeHtml(t.title)}</b> #${listing.num}\n` +
             (attrLines.length ? attrLines.join("\n") + "\n" : "") +
-            `Bozordagi eng arzon narx: <b>${floor} ⭐</b>\n` +
+            `Narx: <b>${listing.priceStars} ⭐</b>\n` +
             `Sizning chegarangiz: ${t.min}-${t.max} ⭐\n\n` +
-            (listing
-              ? listing.link
-              : `Telegram → Sovg'alar → Resale bo'limidan tez tekshiring!`);
+            listing.link;
 
           await sendMessage(bot.token, t.chatId, text, {
-            buttons: listing ? [{ text: "🎁 View Collectible", url: listing.link }] : undefined,
-            showLinkPreview: Boolean(listing),
+            buttons: [{ text: "🎁 View Collectible", url: listing.link }],
+            showLinkPreview: true,
           });
           notified++;
         }
 
-        await setGiftState(bot.id, t.chatId, t.giftId, { lastInRange: inRange, lastPrice: floor });
+        await markSlugsNotified(
+          bot.id,
+          t.chatId,
+          t.giftId,
+          newListings.map((l) => l.slug)
+        );
       }
     }
 

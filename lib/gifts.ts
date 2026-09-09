@@ -57,21 +57,47 @@ export async function getFloorPrice(giftId: string): Promise<number | null> {
   return gift?.resellMinStars ?? null;
 }
 
-export interface CheapestListing {
+export interface ListingInfo {
+  /** Shu aniq nusxaning barqaror identifikatori (slug) - qayta xabar bermaslik uchun */
+  slug: string;
   /** Telegram'ning t.me/nft/<slug> formatidagi to'g'ridan-to'g'ri havolasi (native karta ochadi) */
   link: string;
   /** Nusxa raqami, masalan #40669 */
   num: number;
+  /** Shu aniq nusxaning sotuv narxi (yulduz) */
+  priceStars: number;
   model?: string;
   symbol?: string;
   backdrop?: string;
 }
 
+function parseUniqueListing(g: Api.TypeStarGift): ListingInfo | null {
+  if (g.className !== "StarGiftUnique") return null;
+
+  const priceEntry = (g.resellAmount ?? []).find((a: any) => a.className === "StarsAmount") as any;
+  if (!priceEntry) return null;
+
+  const attrs = (g.attributes ?? []) as any[];
+  const model = attrs.find((a) => a.className === "StarGiftAttributeModel");
+  const symbol = attrs.find((a) => a.className === "StarGiftAttributePattern");
+  const backdrop = attrs.find((a) => a.className === "StarGiftAttributeBackdrop");
+
+  return {
+    slug: g.slug,
+    link: `https://t.me/nft/${g.slug}`,
+    num: Number(g.num),
+    priceStars: Number(priceEntry.amount),
+    model: model?.name,
+    symbol: symbol?.name,
+    backdrop: backdrop?.name,
+  };
+}
+
 /**
- * Bozordagi eng arzon (floor) taklifning havolasi va atributlarini (Model/Symbol/
- * Backdrop, nusxa raqami) oladi. Topilmasa yoki xatolik bo'lsa null qaytaradi.
+ * Bozordagi eng arzon (floor) taklifning havolasi va atributlarini oladi.
+ * Topilmasa yoki xatolik bo'lsa null qaytaradi.
  */
-export async function getCheapestListing(giftId: string): Promise<CheapestListing | null> {
+export async function getCheapestListing(giftId: string): Promise<ListingInfo | null> {
   try {
     const client = await getClient();
     const result = await client.invoke(
@@ -84,24 +110,48 @@ export async function getCheapestListing(giftId: string): Promise<CheapestListin
     );
 
     if (result.className !== "payments.ResaleStarGifts") return null;
-
     const first = result.gifts[0];
-    if (!first || first.className !== "StarGiftUnique") return null;
-
-    const attrs = (first.attributes ?? []) as any[];
-    const model = attrs.find((a) => a.className === "StarGiftAttributeModel");
-    const symbol = attrs.find((a) => a.className === "StarGiftAttributePattern");
-    const backdrop = attrs.find((a) => a.className === "StarGiftAttributeBackdrop");
-
-    return {
-      link: `https://t.me/nft/${first.slug}`,
-      num: Number(first.num),
-      model: model?.name,
-      symbol: symbol?.name,
-      backdrop: backdrop?.name,
-    };
+    return first ? parseUniqueListing(first) : null;
   } catch (err) {
     console.error(`getCheapestListing(${giftId}) xatosi:`, err);
     return null;
+  }
+}
+
+/**
+ * [minStars, maxStars] oralig'idagi barcha bozor takliflarini (nusxalarini) oladi
+ * (narx bo'yicha o'sish tartibida, maxStars'dan oshgach to'xtaydi). `fetchLimit` -
+ * bir chaqiruvda so'raladigan maksimal nusxa soni (xavfsizlik uchun cheklov).
+ */
+export async function getListingsInRange(
+  giftId: string,
+  minStars: number,
+  maxStars: number,
+  fetchLimit = 50
+): Promise<ListingInfo[]> {
+  try {
+    const client = await getClient();
+    const result = await client.invoke(
+      new Api.payments.GetResaleStarGifts({
+        giftId: bigInt(giftId),
+        sortByPrice: true,
+        offset: "",
+        limit: fetchLimit,
+      } as any)
+    );
+
+    if (result.className !== "payments.ResaleStarGifts") return [];
+
+    const listings: ListingInfo[] = [];
+    for (const g of result.gifts) {
+      const listing = parseUniqueListing(g);
+      if (!listing) continue;
+      if (listing.priceStars > maxStars) break; // narx bo'yicha o'sish tartibida - keyingilari ham oshiq bo'ladi
+      if (listing.priceStars >= minStars) listings.push(listing);
+    }
+    return listings;
+  } catch (err) {
+    console.error(`getListingsInRange(${giftId}) xatosi:`, err);
+    return [];
   }
 }
