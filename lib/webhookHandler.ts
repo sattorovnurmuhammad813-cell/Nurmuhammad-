@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendMessage } from "./botApi";
-import { getGiftCatalog, getCheapestListingLink } from "./gifts";
+import { getGiftCatalog, getCheapestListing } from "./gifts";
 import { addTracked, removeTracked, listTrackedForChat } from "./store";
 import type { BotConfig } from "./bots";
 
@@ -116,15 +116,26 @@ async function handleTrack(bot: BotConfig, chatId: number, text: string): Promis
 
   await addTracked(bot.id, chatId, giftId, gift.title, min, max);
 
-  const link = gift.resellMinStars != null ? await getCheapestListingLink(giftId) : null;
+  const listing = gift.resellMinStars != null ? await getCheapestListing(giftId) : null;
 
-  await sendMessage(
-    bot.token,
-    chatId,
-    `✅ Kuzatuvga qo'shildi: <b>${escapeHtml(gift.title)}</b> (${min}-${max} ⭐)\n` +
-      `Hozirgi floor narx: ${gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q"}`,
-    link ? [{ text: "🎁 View Collectible", url: link }] : undefined
-  );
+  const attrLines = listing
+    ? [
+        listing.model && `Model: ${escapeHtml(listing.model)}`,
+        listing.symbol && `Symbol: ${escapeHtml(listing.symbol)}`,
+        listing.backdrop && `Backdrop: ${escapeHtml(listing.backdrop)}`,
+      ].filter(Boolean)
+    : [];
+
+  const confirmText =
+    `✅ Kuzatuvga qo'shildi: <b>${escapeHtml(gift.title)}</b>${listing ? ` #${listing.num}` : ""} (${min}-${max} ⭐)\n` +
+    (attrLines.length ? attrLines.join("\n") + "\n" : "") +
+    `Hozirgi floor narx: ${gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q"}` +
+    (listing ? `\n\n${listing.link}` : "");
+
+  await sendMessage(bot.token, chatId, confirmText, {
+    buttons: listing ? [{ text: "🎁 View Collectible", url: listing.link }] : undefined,
+    showLinkPreview: Boolean(listing),
+  });
 }
 
 async function handleList(bot: BotConfig, chatId: number): Promise<void> {

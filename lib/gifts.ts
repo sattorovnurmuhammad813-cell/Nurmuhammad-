@@ -57,12 +57,21 @@ export async function getFloorPrice(giftId: string): Promise<number | null> {
   return gift?.resellMinStars ?? null;
 }
 
+export interface CheapestListing {
+  /** Telegram'ning t.me/nft/<slug> formatidagi to'g'ridan-to'g'ri havolasi (native karta ochadi) */
+  link: string;
+  /** Nusxa raqami, masalan #40669 */
+  num: number;
+  model?: string;
+  symbol?: string;
+  backdrop?: string;
+}
+
 /**
- * Bozordagi eng arzon (floor) taklifning "View Collectible" havolasini oladi
- * (Telegram'ning t.me/nft/<slug> formatidagi to'g'ridan-to'g'ri havolasi).
- * Topilmasa yoki xatolik bo'lsa null qaytaradi - bu holatda xabar link'siz yuboriladi.
+ * Bozordagi eng arzon (floor) taklifning havolasi va atributlarini (Model/Symbol/
+ * Backdrop, nusxa raqami) oladi. Topilmasa yoki xatolik bo'lsa null qaytaradi.
  */
-export async function getCheapestListingLink(giftId: string): Promise<string | null> {
+export async function getCheapestListing(giftId: string): Promise<CheapestListing | null> {
   try {
     const client = await getClient();
     const result = await client.invoke(
@@ -79,9 +88,20 @@ export async function getCheapestListingLink(giftId: string): Promise<string | n
     const first = result.gifts[0];
     if (!first || first.className !== "StarGiftUnique") return null;
 
-    return `https://t.me/nft/${first.slug}`;
+    const attrs = (first.attributes ?? []) as any[];
+    const model = attrs.find((a) => a.className === "StarGiftAttributeModel");
+    const symbol = attrs.find((a) => a.className === "StarGiftAttributePattern");
+    const backdrop = attrs.find((a) => a.className === "StarGiftAttributeBackdrop");
+
+    return {
+      link: `https://t.me/nft/${first.slug}`,
+      num: Number(first.num),
+      model: model?.name,
+      symbol: symbol?.name,
+      backdrop: backdrop?.name,
+    };
   } catch (err) {
-    console.error(`getCheapestListingLink(${giftId}) xatosi:`, err);
+    console.error(`getCheapestListing(${giftId}) xatosi:`, err);
     return null;
   }
 }
