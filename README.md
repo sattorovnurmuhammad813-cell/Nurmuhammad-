@@ -115,6 +115,25 @@ curl "https://api.telegram.org/bot<BOT_TOKEN>/setWebhook" \
   -d "secret_token=<WEBHOOK_SECRET>"
 ```
 
+### Ikkinchi bot (ixtiyoriy)
+
+Loyiha bitta MTProto akkaunt va bitta Redis'dan foydalangan holda **ikkita
+alohida Telegram botini** bir vaqtda ishlata oladi — ular bir-biridan
+mustaqil, har birining o'z foydalanuvchilari va kuzatuvlari bo'ladi.
+
+Buning uchun `BOT_TOKEN_2` va `WEBHOOK_SECRET_2` ni ham (5-qadamdagi kabi)
+Vercel env variables'ga qo'shing, qayta deploy qiling, so'ng shu botning
+o'z tokeni bilan webhookni ulang:
+
+```bash
+curl "https://api.telegram.org/bot<BOT_TOKEN_2>/setWebhook" \
+  -d "url=https://<loyihangiz>.vercel.app/api/webhook2" \
+  -d "secret_token=<WEBHOOK_SECRET_2>"
+```
+
+E'tibor bering: ikkinchi bot uchun `/api/webhook2` manzili ishlatiladi
+(birinchisi — `/api/webhook`).
+
 ## 8-qadam: narxni tekshirish jadvalini yoqish
 
 **Agar Vercel Pro'dasiz** — `vercel.json` fayliga qo'shing va qayta deploy
@@ -162,13 +181,16 @@ o'zgarganda) bot avtomatik xabar yuboradi.
 
 ```
 api/
-  webhook.ts       — Telegram bot buyruqlarini qabul qiladi (/track, /list, ...)
-  check-gifts.ts   — cron/tashqi pinger chaqiradigan narx tekshiruvchi
+  webhook.ts       — Bot A buyruqlarini qabul qiladi (/track, /list, ...)
+  webhook2.ts      — Bot B buyruqlarini qabul qiladi (ixtiyoriy, ikkinchi bot)
+  check-gifts.ts   — cron/tashqi pinger chaqiradigan narx tekshiruvchi (ikkala bot uchun)
 lib/
   telegramClient.ts — MTProto (teleproto) ulanishi
   gifts.ts          — sovg'alar katalogi va floor narxni olish
   botApi.ts         — Telegram Bot API'ga xabar yuborish
-  store.ts          — Upstash Redis orqali kuzatuvlar va holatni saqlash
+  store.ts          — Upstash Redis orqali kuzatuvlar va holatni saqlash (botId bo'yicha ajratilgan)
+  bots.ts           — env vardan bot(lar) konfiguratsiyasini o'qish
+  webhookHandler.ts — ikkala bot ham ishlatadigan umumiy buyruq logikasi
 scripts/
   generate-session.ts — session string yaratish uchun lokal skript
 ```
