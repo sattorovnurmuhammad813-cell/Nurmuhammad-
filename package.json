@@ -7,7 +7,6 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "session": "ts-node scripts/generate-session.ts",
     "session:qr": "ts-node scripts/generate-session-qr.ts"
