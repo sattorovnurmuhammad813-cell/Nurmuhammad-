@@ -9,11 +9,13 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "session": "ts-node scripts/generate-session.ts",
-    "session:qr": "ts-node scripts/generate-session-qr.ts"
+    "session:qr": "ts-node scripts/generate-session-qr.ts",
+    "worker": "ts-node worker/index.ts"
   },
   "dependencies": {
     "@upstash/redis": "^1.34.3",
     "big-integer": "^1.6.52",
+    "dotenv": "^16.6.1",
     "teleproto": "^1.229.0"
   },
   "devDependencies": {

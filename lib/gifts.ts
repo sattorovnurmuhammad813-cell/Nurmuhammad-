@@ -1,6 +1,17 @@
-import { Api } from "teleproto";
+import { Api, TelegramClient } from "teleproto";
 import bigInt from "big-integer";
 import { withTelegramLock } from "./telegramClient";
+
+/**
+ * Har bir funksiya ixtiyoriy `client` parametrini qabul qiladi. Agar
+ * berilmasa (Vercel serverless muhitida bo'lgani kabi) - avvalgidek Redis
+ * lock orqali vaqtinchalik ulanish ochib-yopiladi. Agar berilsa (doimiy
+ * ishlaydigan worker/VPS muhitida) - o'sha bitta doimiy ulanish to'g'ridan-
+ * to'g'ri ishlatiladi, hech qanday qo'shimcha ulanish ochilmaydi.
+ */
+async function invokeMTProto<T>(fn: (client: TelegramClient) => Promise<T>, client?: TelegramClient): Promise<T> {
+  return client ? fn(client) : withTelegramLock(fn);
+}
 
 export interface CatalogGift {
   id: string;
@@ -23,14 +34,12 @@ const CACHE_MS = 15_000;
  * `resellMinStars` maydoni aynan bozordagi "floor" (eng arzon) narx bo'lib,
  * har bir sovg'a uchun alohida so'rov yubormasdan bitta chaqiruvda barchasini beradi.
  */
-export async function getGiftCatalog(force = false): Promise<CatalogGift[]> {
+export async function getGiftCatalog(force = false, client?: TelegramClient): Promise<CatalogGift[]> {
   if (!force && cache && Date.now() - cache.ts < CACHE_MS) {
     return cache.data;
   }
 
-  const result = await withTelegramLock((client) =>
-    client.invoke(new Api.payments.GetStarGifts({ hash: 0 }))
-  );
+  const result = await invokeMTProto((c) => c.invoke(new Api.payments.GetStarGifts({ hash: 0 })), client);
 
   if (result.className !== "payments.StarGifts") {
     // Nazariy jihatdan hash=0 bilan bu holat bo'lmasligi kerak, lekin ehtiyot chorasi
@@ -98,17 +107,19 @@ function parseUniqueListing(g: Api.TypeStarGift): ListingInfo | null {
  * Bozordagi eng arzon (floor) taklifning havolasi va atributlarini oladi.
  * Topilmasa yoki xatolik bo'lsa null qaytaradi.
  */
-export async function getCheapestListing(giftId: string): Promise<ListingInfo | null> {
+export async function getCheapestListing(giftId: string, client?: TelegramClient): Promise<ListingInfo | null> {
   try {
-    const result = await withTelegramLock((client) =>
-      client.invoke(
-        new Api.payments.GetResaleStarGifts({
-          giftId: bigInt(giftId),
-          sortByPrice: true,
-          offset: "",
-          limit: 1,
-        } as any)
-      )
+    const result = await invokeMTProto(
+      (c) =>
+        c.invoke(
+          new Api.payments.GetResaleStarGifts({
+            giftId: bigInt(giftId),
+            sortByPrice: true,
+            offset: "",
+            limit: 1,
+          } as any)
+        ),
+      client
     );
 
     if (result.className !== "payments.ResaleStarGifts") return null;
@@ -131,18 +142,21 @@ export async function getListingsInRange(
   maxStars: number,
   /** Berilsa, faqat shu Model nomiga (katta-kichik harflarga sezgir emas) ega nusxalar qaytariladi */
   model?: string,
-  fetchLimit = 100
+  fetchLimit = 100,
+  client?: TelegramClient
 ): Promise<ListingInfo[]> {
   try {
-    const result = await withTelegramLock((client) =>
-      client.invoke(
-        new Api.payments.GetResaleStarGifts({
-          giftId: bigInt(giftId),
-          sortByPrice: true,
-          offset: "",
-          limit: fetchLimit,
-        } as any)
-      )
+    const result = await invokeMTProto(
+      (c) =>
+        c.invoke(
+          new Api.payments.GetResaleStarGifts({
+            giftId: bigInt(giftId),
+            sortByPrice: true,
+            offset: "",
+            limit: fetchLimit,
+          } as any)
+        ),
+      client
     );
 
     if (result.className !== "payments.ResaleStarGifts") return [];
