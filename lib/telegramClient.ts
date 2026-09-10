@@ -4,13 +4,6 @@ import { Redis } from "@upstash/redis";
 
 const redis = Redis.fromEnv();
 
-/**
- * Serverless funksiya har chaqirilganda yangi konteynerda ishga tushishi
- * mumkin bo'lgani uchun bu modul darajasidagi promise faqat bitta "sovuq
- * start" davomida keshlanadi - u global qat'iy ulanish emas.
- */
-let clientPromise: Promise<TelegramClient> | null = null;
-
 async function createClient(): Promise<TelegramClient> {
   const apiId = Number(process.env.TELEGRAM_API_ID);
   const apiHash = process.env.TELEGRAM_API_HASH;
@@ -32,23 +25,19 @@ async function createClient(): Promise<TelegramClient> {
   return client;
 }
 
-export async function getClient(): Promise<TelegramClient> {
-  if (!clientPromise) {
-    clientPromise = createClient().catch((err) => {
-      // Xato bo'lsa, keyingi chaqiruvda qayta urinib ko'rish uchun keshni tozalaymiz
-      clientPromise = null;
-      throw err;
-    });
-  }
-  return clientPromise;
-}
-
 // Vercel bir vaqtning o'zida bir nechta konteyner (webhook + cron) ishga
-// tushirishi mumkin - agar ularning har biri bir xil sessiya bilan bir
-// vaqtda alohida ulanish ochsa, Telegram buni shubhali deb hisoblab
-// AUTH_KEY_DUPLICATED xatosi bilan bloklaydi. Shu sabab barcha MTProto
-// so'rovlari Redis orqali navbatga qo'yiladi - bir vaqtning o'zida
-// butun loyiha bo'yicha faqat bitta so'rov bajariladi.
+// tushirishi mumkin. Oldin har bir konteyner o'z ulanishini "sovuq start"
+// davomida ochiq saqlagan (singleton) - lekin bitta konteynerning ulanishi
+// hali OCHIQ turgan paytda boshqa (yangi) konteyner ham ulansa, ikkalasi
+// ham bir xil auth_key bilan PARALLEL ochiq qolib ketadi va Telegram buni
+// shubhali deb hisoblab AUTH_KEY_DUPLICATED xatosi bilan bloklaydi - buni
+// faqat so'rovlarni navbatga qo'yish (lock) yetarli emas edi, chunki
+// ulanishning o'zi lock tashqarisida ochiq qolardi.
+//
+// Shu sabab endi har bir MTProto operatsiyasi uchun: lock olinadi -> YANGI
+// ulanish ochiladi -> so'rov bajariladi -> ulanish DARHOL yopiladi -> lock
+// bo'shatiladi. Shunday qilib bir vaqtning o'zida butun loyiha bo'yicha
+// hech qachon bittadan ortiq ochiq ulanish bo'lmaydi.
 const LOCK_KEY = "gifts:mtproto:lock";
 const LOCK_TTL_MS = 20_000;
 const ACQUIRE_TIMEOUT_MS = 25_000;
@@ -72,7 +61,8 @@ async function releaseLock(id: string): Promise<void> {
 /**
  * MTProto orqali Telegram'ga so'rov yuboradigan har qanday funksiya shu
  * yordamchi orqali chaqirilishi kerak - bu bir vaqtning o'zida faqat bitta
- * ulanish/so'rov bo'lishini kafolatlaydi (AUTH_KEY_DUPLICATED oldini olish uchun).
+ * ULANISH (nafaqat so'rov) bo'lishini kafolatlaydi (AUTH_KEY_DUPLICATED
+ * oldini olish uchun).
  */
 export async function withTelegramLock<T>(fn: (client: TelegramClient) => Promise<T>): Promise<T> {
   const id = `${Date.now()}-${Math.random()}`;
@@ -80,10 +70,15 @@ export async function withTelegramLock<T>(fn: (client: TelegramClient) => Promis
   if (!acquired) {
     throw new Error("Telegram mijozi band (lock timeout) - keyinroq qayta urining.");
   }
+
+  let client: TelegramClient | null = null;
   try {
-    const client = await getClient();
+    client = await createClient();
     return await fn(client);
   } finally {
+    if (client) {
+      await client.disconnect().catch(() => {});
+    }
     await releaseLock(id);
   }
 }
