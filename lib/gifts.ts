@@ -1,6 +1,6 @@
 import { Api } from "teleproto";
 import bigInt from "big-integer";
-import { getClient } from "./telegramClient";
+import { withTelegramLock } from "./telegramClient";
 
 export interface CatalogGift {
   id: string;
@@ -28,8 +28,9 @@ export async function getGiftCatalog(force = false): Promise<CatalogGift[]> {
     return cache.data;
   }
 
-  const client = await getClient();
-  const result = await client.invoke(new Api.payments.GetStarGifts({ hash: 0 }));
+  const result = await withTelegramLock((client) =>
+    client.invoke(new Api.payments.GetStarGifts({ hash: 0 }))
+  );
 
   if (result.className !== "payments.StarGifts") {
     // Nazariy jihatdan hash=0 bilan bu holat bo'lmasligi kerak, lekin ehtiyot chorasi
@@ -99,14 +100,15 @@ function parseUniqueListing(g: Api.TypeStarGift): ListingInfo | null {
  */
 export async function getCheapestListing(giftId: string): Promise<ListingInfo | null> {
   try {
-    const client = await getClient();
-    const result = await client.invoke(
-      new Api.payments.GetResaleStarGifts({
-        giftId: bigInt(giftId),
-        sortByPrice: true,
-        offset: "",
-        limit: 1,
-      } as any)
+    const result = await withTelegramLock((client) =>
+      client.invoke(
+        new Api.payments.GetResaleStarGifts({
+          giftId: bigInt(giftId),
+          sortByPrice: true,
+          offset: "",
+          limit: 1,
+        } as any)
+      )
     );
 
     if (result.className !== "payments.ResaleStarGifts") return null;
@@ -132,14 +134,15 @@ export async function getListingsInRange(
   fetchLimit = 100
 ): Promise<ListingInfo[]> {
   try {
-    const client = await getClient();
-    const result = await client.invoke(
-      new Api.payments.GetResaleStarGifts({
-        giftId: bigInt(giftId),
-        sortByPrice: true,
-        offset: "",
-        limit: fetchLimit,
-      } as any)
+    const result = await withTelegramLock((client) =>
+      client.invoke(
+        new Api.payments.GetResaleStarGifts({
+          giftId: bigInt(giftId),
+          sortByPrice: true,
+          offset: "",
+          limit: fetchLimit,
+        } as any)
+      )
     );
 
     if (result.className !== "payments.ResaleStarGifts") return [];
