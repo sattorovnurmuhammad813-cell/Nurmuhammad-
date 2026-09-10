@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendMessage } from "./botApi";
 import { getGiftCatalog } from "./gifts";
-import { addTracked, removeTracked, listTrackedForChat } from "./store";
+import { addTracked, removeTracked, listTrackedForChat, setPaused, getPausedChats } from "./store";
 import type { BotConfig } from "./bots";
 
 const HELP_TEXT =
@@ -10,7 +10,10 @@ const HELP_TEXT =
   "/listgifts — kuzatish mumkin bo'lgan sovg'alar ro'yxati (ID va hozirgi eng arzon narxi bilan)\n" +
   "/track &lt;gift_id&gt; &lt;min&gt; &lt;max&gt; — shu narx oralig'iga tushganda xabar berish\n" +
   "/list — siz kuzatayotgan sovg'alar\n" +
-  "/untrack &lt;gift_id&gt; — kuzatuvdan olib tashlash\n\n" +
+  "/untrack &lt;gift_id&gt; — kuzatuvdan olib tashlash\n" +
+  "/pause — barcha kuzatuvni vaqtincha to'xtatish (xabar yuborilmaydi)\n" +
+  "/resume — kuzatuvni qayta yoqish\n" +
+  "/status — bot holati (faol/to'xtatilgan)\n\n" +
   "Masalan: /track 123456789 125 420";
 
 function isAuthorized(req: VercelRequest, bot: BotConfig): boolean {
@@ -54,6 +57,14 @@ export async function handleWebhook(req: VercelRequest, res: VercelResponse, bot
       await handleList(bot, chatId);
     } else if (text.startsWith("/untrack")) {
       await handleUntrack(bot, chatId, text);
+    } else if (text === "/pause") {
+      await setPaused(bot.id, chatId, true);
+      await sendMessage(bot.token, chatId, "⏸ Kuzatuv to'xtatildi. Qayta yoqish uchun /resume yuboring.");
+    } else if (text === "/resume") {
+      await setPaused(bot.id, chatId, false);
+      await sendMessage(bot.token, chatId, "▶️ Kuzatuv qayta yoqildi.");
+    } else if (text === "/status") {
+      await handleStatus(bot, chatId);
     } else {
       await sendMessage(bot.token, chatId, "Buyruqni tushunmadim. /help ni yuboring.");
     }
@@ -134,6 +145,20 @@ async function handleList(bot: BotConfig, chatId: number): Promise<void> {
 
   const lines = items.map((t) => `<code>${t.giftId}</code> — ${escapeHtml(t.title)} (${t.min}-${t.max} ⭐)`);
   await sendMessage(bot.token, chatId, `Sizning kuzatuvlaringiz:\n\n${lines.join("\n")}`);
+}
+
+async function handleStatus(bot: BotConfig, chatId: number): Promise<void> {
+  const items = await listTrackedForChat(bot.id, chatId);
+  const pausedChats = await getPausedChats(bot.id);
+  const isPaused = pausedChats.has(String(chatId));
+
+  await sendMessage(
+    bot.token,
+    chatId,
+    `Bot holati: ${isPaused ? "⏸ To'xtatilgan" : "▶️ Faol"}\n` +
+      `Kuzatilayotgan sovg'alar: ${items.length} ta\n\n` +
+      (isPaused ? "Yoqish uchun /resume yuboring." : "To'xtatish uchun /pause yuboring.")
+  );
 }
 
 async function handleUntrack(bot: BotConfig, chatId: number, text: string): Promise<void> {

@@ -21,6 +21,9 @@ const trackedKey = (botId: string, chatId: number) => `gifts:${botId}:tracked:${
 // har bir nusxa haqida faqat bir marta xabar berish uchun.
 const notifiedKey = (botId: string, chatId: number, giftId: string) =>
   `gifts:${botId}:notified:${chatId}:${giftId}`;
+// Chat vaqtincha to'xtatilganmi (/pause) - shu yerda bo'lgan chatlar uchun
+// check-gifts hech qanday xabar yubormaydi, lekin kuzatuv ro'yxati saqlanib qoladi.
+const pausedChatsKey = (botId: string) => `gifts:${botId}:pausedChats`;
 
 function parseTracked(raw: unknown): Omit<TrackedGift, "botId" | "chatId"> | null {
   if (raw == null) return null;
@@ -91,4 +94,17 @@ export async function markSlugsNotified(
   if (slugs.length === 0) return;
   const [first, ...rest] = slugs;
   await redis.sadd(notifiedKey(botId, chatId, giftId), first, ...rest);
+}
+
+export async function setPaused(botId: string, chatId: number, paused: boolean): Promise<void> {
+  if (paused) {
+    await redis.sadd(pausedChatsKey(botId), String(chatId));
+  } else {
+    await redis.srem(pausedChatsKey(botId), String(chatId));
+  }
+}
+
+export async function getPausedChats(botId: string): Promise<Set<string>> {
+  const members = await redis.smembers(pausedChatsKey(botId));
+  return new Set(members);
 }

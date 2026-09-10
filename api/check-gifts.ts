@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getAllTracked, getNotifiedSlugs, markSlugsNotified } from "../lib/store";
+import { getAllTracked, getNotifiedSlugs, markSlugsNotified, getPausedChats } from "../lib/store";
 import { getListingsInRange } from "../lib/gifts";
 import { sendMessage } from "../lib/botApi";
 import { getConfiguredBots } from "../lib/bots";
@@ -35,9 +35,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
     for (const bot of bots) {
       const tracked = await getAllTracked(bot.id);
-      checked += tracked.length;
+      const pausedChats = await getPausedChats(bot.id);
+      const active = tracked.filter((t) => !pausedChats.has(String(t.chatId)));
+      checked += active.length;
 
-      for (const t of tracked) {
+      for (const t of active) {
         const listings = await getListingsInRange(t.giftId, t.min, t.max);
         if (listings.length === 0) continue;
 
