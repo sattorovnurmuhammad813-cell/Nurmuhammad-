@@ -17,8 +17,11 @@ async function createClient(): Promise<TelegramClient> {
     );
   }
 
+  // connectionRetries past ko'p bo'lsa, bitta chaqiruv o'zi bir necha marta
+  // qayta ulanib, lock muddatidan (TTL) uzoqroq ushlab turishi mumkin edi -
+  // shu sabab tezroq muvaffaqiyatsiz bo'lib, navbatdagi so'rovga yo'l ochamiz.
   const client = new TelegramClient(new StringSession(sessionString), apiId, apiHash, {
-    connectionRetries: 3,
+    connectionRetries: 1,
   });
 
   await client.connect();
@@ -39,8 +42,8 @@ async function createClient(): Promise<TelegramClient> {
 // bo'shatiladi. Shunday qilib bir vaqtning o'zida butun loyiha bo'yicha
 // hech qachon bittadan ortiq ochiq ulanish bo'lmaydi.
 const LOCK_KEY = "gifts:mtproto:lock";
-const LOCK_TTL_MS = 20_000;
-const ACQUIRE_TIMEOUT_MS = 25_000;
+const LOCK_TTL_MS = 45_000;
+const ACQUIRE_TIMEOUT_MS = 40_000;
 const RETRY_DELAY_MS = 300;
 
 async function acquireLock(id: string): Promise<boolean> {

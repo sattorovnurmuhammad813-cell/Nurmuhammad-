@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/check-gifts.ts": { "maxDuration": 60 },
-    "api/webhook.ts": { "maxDuration": 30 },
-    "api/webhook2.ts": { "maxDuration": 30 }
+    "api/webhook.ts": { "maxDuration": 60 },
+    "api/webhook2.ts": { "maxDuration": 60 }
   }
 }
