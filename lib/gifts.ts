@@ -127,7 +127,9 @@ export async function getListingsInRange(
   giftId: string,
   minStars: number,
   maxStars: number,
-  fetchLimit = 50
+  /** Berilsa, faqat shu Model nomiga (katta-kichik harflarga sezgir emas) ega nusxalar qaytariladi */
+  model?: string,
+  fetchLimit = 100
 ): Promise<ListingInfo[]> {
   try {
     const client = await getClient();
@@ -142,11 +144,13 @@ export async function getListingsInRange(
 
     if (result.className !== "payments.ResaleStarGifts") return [];
 
+    const modelLower = model?.toLowerCase();
     const listings: ListingInfo[] = [];
     for (const g of result.gifts) {
       const listing = parseUniqueListing(g);
       if (!listing) continue;
       if (listing.priceStars > maxStars) break; // narx bo'yicha o'sish tartibida - keyingilari ham oshiq bo'ladi
+      if (modelLower && listing.model?.toLowerCase() !== modelLower) continue;
       if (listing.priceStars >= minStars) listings.push(listing);
     }
     return listings;

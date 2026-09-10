@@ -40,10 +40,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       checked += active.length;
 
       for (const t of active) {
-        const listings = await getListingsInRange(t.giftId, t.min, t.max);
+        const listings = await getListingsInRange(t.giftId, t.min, t.max, t.model);
         if (listings.length === 0) continue;
 
-        const alreadyNotified = await getNotifiedSlugs(bot.id, t.chatId, t.giftId);
+        const alreadyNotified = await getNotifiedSlugs(bot.id, t.chatId, t.giftId, t.model);
         const newListings = listings.filter((l) => !alreadyNotified.has(l.slug));
         if (newListings.length === 0) continue;
 
@@ -72,7 +72,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
           bot.id,
           t.chatId,
           t.giftId,
-          newListings.map((l) => l.slug)
+          newListings.map((l) => l.slug),
+          t.model
         );
       }
     }

@@ -8,13 +8,15 @@ const HELP_TEXT =
   "Salom! Men Telegram kolleksion sovg'alar (gift) bozoridagi narx tushishini kuzataman.\n\n" +
   "Buyruqlar:\n" +
   "/listgifts — kuzatish mumkin bo'lgan sovg'alar ro'yxati (ID va hozirgi eng arzon narxi bilan)\n" +
-  "/track &lt;gift_id&gt; &lt;min&gt; &lt;max&gt; — shu narx oralig'iga tushganda xabar berish\n" +
+  "/track &lt;gift_id&gt; &lt;min&gt; &lt;max&gt; [model nomi] — shu narx oralig'iga tushganda xabar berish. " +
+  "Model nomi ixtiyoriy — berilsa, faqat aynan shu Model atributiga ega nusxalar haqida xabar keladi\n" +
   "/list — siz kuzatayotgan sovg'alar\n" +
-  "/untrack &lt;gift_id&gt; — kuzatuvdan olib tashlash\n" +
+  "/untrack &lt;gift_id&gt; [model nomi] — kuzatuvdan olib tashlash\n" +
   "/pause — barcha kuzatuvni vaqtincha to'xtatish (xabar yuborilmaydi)\n" +
   "/resume — kuzatuvni qayta yoqish\n" +
   "/status — bot holati (faol/to'xtatilgan)\n\n" +
-  "Masalan: /track 123456789 125 420";
+  "Masalan: /track 123456789 125 420\n" +
+  "Yoki aniq model bilan: /track 123456789 500 1500 Stargazer";
 
 function isAuthorized(req: VercelRequest, bot: BotConfig): boolean {
   if (!bot.webhookSecret) return true; // sozlanmagan bo'lsa cheklovsiz (faqat dev uchun)
@@ -103,12 +105,13 @@ async function handleTrack(bot: BotConfig, chatId: number, text: string): Promis
   const giftId = parts[1];
   const min = Number(parts[2]);
   const max = Number(parts[3]);
+  const model = parts.slice(4).join(" ") || undefined;
 
   if (!giftId || !Number.isFinite(min) || !Number.isFinite(max) || min > max) {
     await sendMessage(
       bot.token,
       chatId,
-      "Foydalanish: /track <gift_id> <min> <max>\nMasalan: /track 123456789 125 420"
+      "Foydalanish: /track <gift_id> <min> <max> [model nomi]\nMasalan: /track 123456789 125 420"
     );
     return;
   }
@@ -125,12 +128,12 @@ async function handleTrack(bot: BotConfig, chatId: number, text: string): Promis
     return;
   }
 
-  await addTracked(bot.id, chatId, giftId, gift.title, min, max);
+  await addTracked(bot.id, chatId, giftId, gift.title, min, max, model);
 
   await sendMessage(
     bot.token,
     chatId,
-    `✅ Kuzatuvga qo'shildi: <b>${escapeHtml(gift.title)}</b> (${min}-${max} ⭐)\n` +
+    `✅ Kuzatuvga qo'shildi: <b>${escapeHtml(gift.title)}</b>${model ? ` — Model: <b>${escapeHtml(model)}</b>` : ""} (${min}-${max} ⭐)\n` +
       `Hozirgi floor narx: ${gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q"}\n\n` +
       `Shu oralig'dagi barcha nusxalar haqida bir daqiqa ichida alohida-alohida xabar keladi.`
   );
@@ -143,7 +146,10 @@ async function handleList(bot: BotConfig, chatId: number): Promise<void> {
     return;
   }
 
-  const lines = items.map((t) => `<code>${t.giftId}</code> — ${escapeHtml(t.title)} (${t.min}-${t.max} ⭐)`);
+  const lines = items.map(
+    (t) =>
+      `<code>${t.giftId}</code> — ${escapeHtml(t.title)}${t.model ? ` — Model: <b>${escapeHtml(t.model)}</b>` : ""} (${t.min}-${t.max} ⭐)`
+  );
   await sendMessage(bot.token, chatId, `Sizning kuzatuvlaringiz:\n\n${lines.join("\n")}`);
 }
 
@@ -164,13 +170,14 @@ async function handleStatus(bot: BotConfig, chatId: number): Promise<void> {
 async function handleUntrack(bot: BotConfig, chatId: number, text: string): Promise<void> {
   const parts = text.split(/\s+/);
   const giftId = parts[1];
+  const model = parts.slice(2).join(" ") || undefined;
 
   if (!giftId) {
-    await sendMessage(bot.token, chatId, "Foydalanish: /untrack <gift_id>");
+    await sendMessage(bot.token, chatId, "Foydalanish: /untrack <gift_id> [model nomi]");
     return;
   }
 
-  const removed = await removeTracked(bot.id, chatId, giftId);
+  const removed = await removeTracked(bot.id, chatId, giftId, model);
   await sendMessage(bot.token, chatId, removed ? "✅ Kuzatuvdan olib tashlandi." : "Bu ID kuzatuvda topilmadi.");
 }
 
