@@ -9,12 +9,12 @@ import { setMyCommands } from "../lib/botApi";
 // buyruqlar bilan cheklangan (/track, /untrack, /listgifts kabi kamroq ishlatiladiganlari
 // bu ro'yxatda ko'rinmaydi, lekin yozib yuborilsa baribir ishlayveradi).
 const MENU_COMMANDS = [
-  { command: "giftlar", description: "Sovg'ani tugmalar orqali tanlab kuzatish" },
-  { command: "list", description: "Mening kuzatuvlarim" },
-  { command: "status", description: "Bot holati" },
-  { command: "pause", description: "Kuzatuvni vaqtincha to'xtatish" },
-  { command: "resume", description: "Kuzatuvni qayta yoqish" },
-  { command: "help", description: "Yordam" },
+  { command: "giftlar", description: "🎁 Sovg'alar ro'yxati" },
+  { command: "list", description: "📋 Mening kuzatuvlarim" },
+  { command: "pause", description: "⏸ To'xtatish" },
+  { command: "resume", description: "▶️ Yoqish" },
+  { command: "status", description: "📊 Bot holati" },
+  { command: "help", description: "❓ Yordam" },
 ];
 
 async function main() {
