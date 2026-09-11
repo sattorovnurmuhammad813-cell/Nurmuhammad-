@@ -26,6 +26,11 @@ const notifiedKey = (botId: string, chatId: number, trackKey: string) =>
 // Chat vaqtincha to'xtatilganmi (/pause) - shu yerda bo'lgan chatlar uchun
 // check-gifts hech qanday xabar yubormaydi, lekin kuzatuv ro'yxati saqlanib qoladi.
 const pausedChatsKey = (botId: string) => `gifts:${botId}:pausedChats`;
+// /giftlar menyusida "Boshqa narx kiritish" bosilgach, shu chat uchun qaysi
+// gift kutilayotganini saqlaydi - keyingi oddiy (buyruq bo'lmagan) xabar shu
+// gift uchun maksimal narx sifatida talqin qilinadi. 5 daqiqadan keyin o'zi tozalanadi.
+const pendingKey = (botId: string, chatId: number) => `gifts:${botId}:pending:${chatId}`;
+const PENDING_TTL_SEC = 300;
 
 /**
  * Bitta gift_id'ni bir nechta (masalan turli model bo'yicha) alohida-alohida
@@ -126,4 +131,28 @@ export async function setPaused(botId: string, chatId: number, paused: boolean):
 export async function getPausedChats(botId: string): Promise<Set<string>> {
   const members = await redis.smembers(pausedChatsKey(botId));
   return new Set(members);
+}
+
+export interface PendingCustomPrice {
+  giftId: string;
+  title: string;
+}
+
+export async function setPendingCustomPrice(
+  botId: string,
+  chatId: number,
+  giftId: string,
+  title: string
+): Promise<void> {
+  await redis.set(pendingKey(botId, chatId), JSON.stringify({ giftId, title }), { ex: PENDING_TTL_SEC });
+}
+
+export async function getPendingCustomPrice(botId: string, chatId: number): Promise<PendingCustomPrice | null> {
+  const raw = await redis.get<unknown>(pendingKey(botId, chatId));
+  if (raw == null) return null;
+  return (typeof raw === "string" ? JSON.parse(raw) : raw) as PendingCustomPrice;
+}
+
+export async function clearPendingCustomPrice(botId: string, chatId: number): Promise<void> {
+  await redis.del(pendingKey(botId, chatId));
 }
