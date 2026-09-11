@@ -19,6 +19,24 @@ export interface InlineButton {
 
 export type InlineKeyboard = InlineButton[][];
 
+export interface BotCommand {
+  command: string;
+  description: string;
+}
+
+/** Botning "Menu" tugmasidagi buyruqlar ro'yxatini sozlaydi (BotFather'dagi bilan bir xil natija) */
+export async function setMyCommands(token: string, commands: BotCommand[]): Promise<void> {
+  const res = await fetch(`https://api.telegram.org/bot${token}/setMyCommands`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ commands }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    console.error(`setMyCommands muvaffaqiyatsiz: ${res.status} ${body}`);
+  }
+}
+
 export async function sendMessage(
   token: string,
   chatId: number | string,

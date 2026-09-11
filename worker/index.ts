@@ -3,6 +3,19 @@ import { getUserClient } from "./telegramClient";
 import { startPollLoop } from "./poll";
 import { startCommandLoop } from "./commands";
 import { getConfiguredBots } from "../lib/bots";
+import { setMyCommands } from "../lib/botApi";
+
+// Botning "Menu" tugmasidagi ro'yxat - ixcham tutish uchun eng ko'p ishlatiladigan
+// buyruqlar bilan cheklangan (/track, /untrack, /listgifts kabi kamroq ishlatiladiganlari
+// bu ro'yxatda ko'rinmaydi, lekin yozib yuborilsa baribir ishlayveradi).
+const MENU_COMMANDS = [
+  { command: "giftlar", description: "Sovg'ani tugmalar orqali tanlab kuzatish" },
+  { command: "list", description: "Mening kuzatuvlarim" },
+  { command: "status", description: "Bot holati" },
+  { command: "pause", description: "Kuzatuvni vaqtincha to'xtatish" },
+  { command: "resume", description: "Kuzatuvni qayta yoqish" },
+  { command: "help", description: "Yordam" },
+];
 
 async function main() {
   const bots = getConfiguredBots();
@@ -15,6 +28,9 @@ async function main() {
 
   // Har bir bot uchun buyruqlarni tinglash (parallel, bir-biriga xalaqit bermaydi)
   for (const bot of bots) {
+    setMyCommands(bot.token, MENU_COMMANDS).catch((err) => {
+      console.error(`[index] Bot "${bot.id}" uchun setMyCommands xatosi:`, err);
+    });
     startCommandLoop(bot, client).catch((err) => {
       console.error(`[index] Bot "${bot.id}" command loop butunlay to'xtadi:`, err);
     });

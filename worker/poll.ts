@@ -19,10 +19,10 @@ async function checkOnce(client: TelegramClient): Promise<void> {
     const active = tracked.filter((t) => !pausedChats.has(String(t.chatId)));
 
     for (const t of active) {
-      const listings = await getListingsInRange(t.giftId, t.min, t.max, t.model, 100, client);
+      const listings = await getListingsInRange(t.giftId, t.min, t.max, t.model, t.backdrop, 100, client);
       if (listings.length === 0) continue;
 
-      const alreadyNotified = await getNotifiedSlugs(bot.id, t.chatId, t.giftId, t.model);
+      const alreadyNotified = await getNotifiedSlugs(bot.id, t.chatId, t.giftId, t.model, t.backdrop);
       const newListings = listings.filter((l) => !alreadyNotified.has(l.slug));
       if (newListings.length === 0) continue;
 
@@ -51,7 +51,8 @@ async function checkOnce(client: TelegramClient): Promise<void> {
         t.chatId,
         t.giftId,
         newListings.map((l) => l.slug),
-        t.model
+        t.model,
+        t.backdrop
       );
     }
   }

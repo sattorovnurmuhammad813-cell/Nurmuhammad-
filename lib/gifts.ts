@@ -187,6 +187,8 @@ export async function getListingsInRange(
   maxStars: number,
   /** Berilsa, faqat shu Model nomiga (katta-kichik harflarga sezgir emas) ega nusxalar qaytariladi */
   model?: string,
+  /** Berilsa, faqat shu Backdrop nomiga (katta-kichik harflarga sezgir emas) ega nusxalar qaytariladi */
+  backdrop?: string,
   fetchLimit = 100,
   client?: TelegramClient
 ): Promise<ListingInfo[]> {
@@ -207,17 +209,108 @@ export async function getListingsInRange(
     if (result.className !== "payments.ResaleStarGifts") return [];
 
     const modelLower = model?.toLowerCase();
+    const backdropLower = backdrop?.toLowerCase();
     const listings: ListingInfo[] = [];
     for (const g of result.gifts) {
       const listing = parseUniqueListing(g);
       if (!listing) continue;
       if (listing.priceStars > maxStars) break; // narx bo'yicha o'sish tartibida - keyingilari ham oshiq bo'ladi
       if (modelLower && listing.model?.toLowerCase() !== modelLower) continue;
+      if (backdropLower && listing.backdrop?.toLowerCase() !== backdropLower) continue;
       if (listing.priceStars >= minStars) listings.push(listing);
     }
     return listings;
   } catch (err) {
     console.error(`getListingsInRange(${giftId}) xatosi:`, err);
     return [];
+  }
+}
+
+export interface GiftAttributeOption {
+  name: string;
+  /** Shu attributga ega hozirgi bozor takliflari soni */
+  count: number;
+  /** StarGiftAttributeIdModel uchun document id */
+  documentId?: string;
+  /** StarGiftAttributeIdBackdrop uchun backdrop id */
+  backdropId?: number;
+}
+
+let attrCache: Map<string, { models: GiftAttributeOption[]; backdrops: GiftAttributeOption[]; ts: number }> =
+  new Map();
+// Model/backdrop TO'PLAMI (qaysi variantlar umuman mavjud) narxlardan farqli o'laroq
+// tez-tez o'zgarmaydi - shuning uchun ancha uzoqroq keshlanadi. Bu /giftlar
+// menyusida bir necha bosqichli tanlov (Model -> Backdrop -> narx) davomida
+// indekslar (ro'yxatdagi tartib raqami) o'zgarib ketmasligi uchun ham muhim.
+const ATTR_CACHE_MS = 5 * 60_000;
+
+/**
+ * Shu gift uchun bozorda mavjud barcha Model va Backdrop variantlarini (nomi va
+ * shu variantga ega hozirgi takliflar soni bilan) oladi - /giftlar menyusidagi
+ * "Model" va "Backdrop" tanlov ro'yxatlari uchun.
+ */
+export async function getGiftAttributeOptions(
+  giftId: string,
+  client?: TelegramClient
+): Promise<{ models: GiftAttributeOption[]; backdrops: GiftAttributeOption[] }> {
+  const cached = attrCache.get(giftId);
+  if (cached && Date.now() - cached.ts < ATTR_CACHE_MS) {
+    return cached;
+  }
+
+  try {
+    const result = await invokeMTProto(
+      (c) =>
+        c.invoke(
+          new Api.payments.GetResaleStarGifts({
+            giftId: bigInt(giftId),
+            sortByPrice: true,
+            offset: "",
+            limit: 1,
+          } as any)
+        ),
+      client
+    );
+
+    if (result.className !== "payments.ResaleStarGifts") {
+      return cached ?? { models: [], backdrops: [] };
+    }
+
+    const attrs = (result.attributes ?? []) as any[];
+    const counters = (result.counters ?? []) as any[];
+
+    const modelCounts = new Map<string, number>();
+    const backdropCounts = new Map<number, number>();
+    for (const c of counters) {
+      const a = c.attribute;
+      if (a?.className === "StarGiftAttributeIdModel") modelCounts.set(String(a.documentId), Number(c.count));
+      else if (a?.className === "StarGiftAttributeIdBackdrop")
+        backdropCounts.set(Number(a.backdropId), Number(c.count));
+    }
+
+    const models: GiftAttributeOption[] = [];
+    const backdrops: GiftAttributeOption[] = [];
+    for (const a of attrs) {
+      if (a.className === "StarGiftAttributeModel") {
+        const documentId = String(a.document?.id ?? "");
+        models.push({ name: a.name, count: modelCounts.get(documentId) ?? 0, documentId });
+      } else if (a.className === "StarGiftAttributeBackdrop") {
+        const backdropId = Number(a.backdropId);
+        backdrops.push({ name: a.name, count: backdropCounts.get(backdropId) ?? 0, backdropId });
+      }
+    }
+    // Alifbo bo'yicha (son bo'yicha emas) tartiblanadi - ro'yxatdagi indekslar
+    // /giftlar'ning bosqichma-bosqich tanlovida barqaror qolishi kerak, bu esa
+    // sonlarga emas, faqat nomlarga bog'liq bo'lganda kafolatlanadi (sonlar har
+    // safar so'rov yangilanganda o'zgarib turadi, nomlar to'plami deyarli o'zgarmas).
+    models.sort((x, y) => x.name.localeCompare(y.name));
+    backdrops.sort((x, y) => x.name.localeCompare(y.name));
+
+    const data = { models, backdrops, ts: Date.now() };
+    attrCache.set(giftId, data);
+    return data;
+  } catch (err) {
+    console.error(`getGiftAttributeOptions(${giftId}) xatosi:`, err);
+    return cached ?? { models: [], backdrops: [] };
   }
 }

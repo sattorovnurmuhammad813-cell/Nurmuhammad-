@@ -12,6 +12,8 @@ export interface TrackedGift {
   max: number;
   /** Agar berilgan bo'lsa, faqat shu Model atributiga ega nusxalar haqida xabar beriladi */
   model?: string;
+  /** Agar berilgan bo'lsa, faqat shu Backdrop atributiga ega nusxalar haqida xabar beriladi */
+  backdrop?: string;
 }
 
 // Ikkita bot bir xil Redis'ni ishlatgani uchun barcha kalitlar botId bilan
@@ -27,17 +29,22 @@ const notifiedKey = (botId: string, chatId: number, trackKey: string) =>
 // check-gifts hech qanday xabar yubormaydi, lekin kuzatuv ro'yxati saqlanib qoladi.
 const pausedChatsKey = (botId: string) => `gifts:${botId}:pausedChats`;
 // /giftlar menyusida "Boshqa narx kiritish" bosilgach, shu chat uchun qaysi
-// gift kutilayotganini saqlaydi - keyingi oddiy (buyruq bo'lmagan) xabar shu
-// gift uchun maksimal narx sifatida talqin qilinadi. 5 daqiqadan keyin o'zi tozalanadi.
+// gift (va tanlangan Model/Backdrop) kutilayotganini saqlaydi - keyingi oddiy
+// (buyruq bo'lmagan) xabar shu gift uchun maksimal narx sifatida talqin qilinadi.
+// 5 daqiqadan keyin o'zi tozalanadi.
 const pendingKey = (botId: string, chatId: number) => `gifts:${botId}:pending:${chatId}`;
 const PENDING_TTL_SEC = 300;
 
 /**
- * Bitta gift_id'ni bir nechta (masalan turli model bo'yicha) alohida-alohida
- * kuzatish mumkin bo'lishi uchun hash maydon kaliti giftId+model'dan tuziladi.
+ * Bitta gift_id'ni bir nechta (masalan turli Model/Backdrop bo'yicha) alohida-
+ * alohida kuzatish mumkin bo'lishi uchun hash maydon kaliti giftId+model+backdrop'dan
+ * tuziladi.
  */
-export function trackKeyOf(giftId: string, model?: string): string {
-  return model ? `${giftId}::${model.toLowerCase()}` : giftId;
+export function trackKeyOf(giftId: string, model?: string, backdrop?: string): string {
+  let key = giftId;
+  if (model) key += `::m=${model.toLowerCase()}`;
+  if (backdrop) key += `::b=${backdrop.toLowerCase()}`;
+  return key;
 }
 
 function parseTracked(raw: unknown): Omit<TrackedGift, "botId" | "chatId"> | null {
@@ -53,12 +60,13 @@ export async function addTracked(
   title: string,
   min: number,
   max: number,
-  model?: string
+  model?: string,
+  backdrop?: string
 ): Promise<void> {
-  const key = trackKeyOf(giftId, model);
+  const key = trackKeyOf(giftId, model, backdrop);
   await redis.sadd(chatsKey(botId), String(chatId));
   await redis.hset(trackedKey(botId, chatId), {
-    [key]: JSON.stringify({ giftId, title, min, max, model }),
+    [key]: JSON.stringify({ giftId, title, min, max, model, backdrop }),
   });
   // Yangi chegara qo'yilganda eski bildirishnoma tarixini tozalaymiz -
   // hozirgi oraliqdagi nusxalar haqida qaytadan xabar berilsin.
@@ -69,9 +77,10 @@ export async function removeTracked(
   botId: string,
   chatId: number,
   giftId: string,
-  model?: string
+  model?: string,
+  backdrop?: string
 ): Promise<boolean> {
-  const key = trackKeyOf(giftId, model);
+  const key = trackKeyOf(giftId, model, backdrop);
   const removed = await redis.hdel(trackedKey(botId, chatId), key);
   await redis.del(notifiedKey(botId, chatId, key));
   return removed > 0;
@@ -102,8 +111,14 @@ export async function getAllTracked(botId: string): Promise<TrackedGift[]> {
 }
 
 /** Shu chat+kuzatuv uchun avval xabar qilingan nusxalar (slug) to'plamini oladi */
-export async function getNotifiedSlugs(botId: string, chatId: number, giftId: string, model?: string): Promise<Set<string>> {
-  const members = await redis.smembers(notifiedKey(botId, chatId, trackKeyOf(giftId, model)));
+export async function getNotifiedSlugs(
+  botId: string,
+  chatId: number,
+  giftId: string,
+  model?: string,
+  backdrop?: string
+): Promise<Set<string>> {
+  const members = await redis.smembers(notifiedKey(botId, chatId, trackKeyOf(giftId, model, backdrop)));
   return new Set(members);
 }
 
@@ -113,11 +128,12 @@ export async function markSlugsNotified(
   chatId: number,
   giftId: string,
   slugs: string[],
-  model?: string
+  model?: string,
+  backdrop?: string
 ): Promise<void> {
   if (slugs.length === 0) return;
   const [first, ...rest] = slugs;
-  await redis.sadd(notifiedKey(botId, chatId, trackKeyOf(giftId, model)), first, ...rest);
+  await redis.sadd(notifiedKey(botId, chatId, trackKeyOf(giftId, model, backdrop)), first, ...rest);
 }
 
 export async function setPaused(botId: string, chatId: number, paused: boolean): Promise<void> {
@@ -136,15 +152,21 @@ export async function getPausedChats(botId: string): Promise<Set<string>> {
 export interface PendingCustomPrice {
   giftId: string;
   title: string;
+  model?: string;
+  backdrop?: string;
 }
 
 export async function setPendingCustomPrice(
   botId: string,
   chatId: number,
   giftId: string,
-  title: string
+  title: string,
+  model?: string,
+  backdrop?: string
 ): Promise<void> {
-  await redis.set(pendingKey(botId, chatId), JSON.stringify({ giftId, title }), { ex: PENDING_TTL_SEC });
+  await redis.set(pendingKey(botId, chatId), JSON.stringify({ giftId, title, model, backdrop }), {
+    ex: PENDING_TTL_SEC,
+  });
 }
 
 export async function getPendingCustomPrice(botId: string, chatId: number): Promise<PendingCustomPrice | null> {
