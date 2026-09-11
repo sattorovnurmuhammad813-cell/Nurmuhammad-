@@ -123,56 +123,46 @@ export async function answerCallbackQuery(token: string, callbackQueryId: string
 }
 
 /**
- * gift_id -> sticker file_id xaritasini Bot API'ning getAvailableGifts orqali oladi
- * (bu /giftlar menyusida gift tanlanganda uning rasmini ko'rsatish uchun ishlatiladi).
- *
- * DIQQAT: gift ID'lar 19-20 xonali son bo'lgani uchun oddiy JSON.parse ularni
- * JS Number sifatida noto'g'ri (aniqlikni yo'qotib) o'qiydi - shu sabab avval
- * "id" maydonlarini qatorga (string) aylantirib olamiz.
+ * Xotiradagi fayl baytlarini (masalan MTProto orqali yuklab olingan gift stikeri)
+ * to'g'ridan-to'g'ri Bot API'ga multipart sifatida yuklab, stiker sifatida yuboradi.
+ * Bot API stiker formatini qabul qilmasa (masalan noma'lum format), `false` qaytaradi -
+ * shunda chaqiruvchi tomon sendDocumentFile'ga tushishi mumkin.
  */
-let giftStickerCache: { data: Map<string, string>; ts: number } | null = null;
-const GIFT_STICKER_CACHE_MS = 5 * 60_000;
+export async function sendStickerFile(
+  token: string,
+  chatId: number | string,
+  buffer: Buffer,
+  filename: string
+): Promise<boolean> {
+  const form = new FormData();
+  form.append("chat_id", String(chatId));
+  form.append("sticker", new Blob([buffer]), filename);
 
-export async function getGiftStickerMap(token: string): Promise<Map<string, string>> {
-  if (giftStickerCache && Date.now() - giftStickerCache.ts < GIFT_STICKER_CACHE_MS) {
-    return giftStickerCache.data;
-  }
-
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/getAvailableGifts`);
-    if (!res.ok) {
-      console.error(`getAvailableGifts muvaffaqiyatsiz: ${res.status}`);
-      return giftStickerCache?.data ?? new Map();
-    }
-    const rawText = await res.text();
-    const safeJson = rawText.replace(/"id":(\d{16,})/g, '"id":"$1"');
-    const data = JSON.parse(safeJson) as {
-      ok: boolean;
-      result?: { gifts?: Array<{ id: string; sticker?: { file_id?: string } }> };
-    };
-
-    const map = new Map<string, string>();
-    for (const g of data.result?.gifts ?? []) {
-      if (g.sticker?.file_id) map.set(String(g.id), g.sticker.file_id);
-    }
-    giftStickerCache = { data: map, ts: Date.now() };
-    return map;
-  } catch (err) {
-    console.error("getGiftStickerMap xatosi:", err);
-    return giftStickerCache?.data ?? new Map();
-  }
-}
-
-/** Gift stikerini (rasm/animatsiya) alohida xabar sifatida yuboradi */
-export async function sendSticker(token: string, chatId: number | string, stickerFileId: string): Promise<void> {
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendSticker`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, sticker: stickerFileId }),
-  });
-
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendSticker`, { method: "POST", body: form });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    console.error(`sendSticker muvaffaqiyatsiz (chat ${chatId}): ${res.status} ${body}`);
+    console.error(`sendStickerFile muvaffaqiyatsiz (chat ${chatId}): ${res.status} ${body}`);
+    return false;
   }
+  return true;
+}
+
+/** sendStickerFile format sababli rad etsa, umumiy fayl sifatida yuboradigan zaxira yo'l */
+export async function sendDocumentFile(
+  token: string,
+  chatId: number | string,
+  buffer: Buffer,
+  filename: string
+): Promise<boolean> {
+  const form = new FormData();
+  form.append("chat_id", String(chatId));
+  form.append("document", new Blob([buffer]), filename);
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendDocument`, { method: "POST", body: form });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    console.error(`sendDocumentFile muvaffaqiyatsiz (chat ${chatId}): ${res.status} ${body}`);
+    return false;
+  }
+  return true;
 }

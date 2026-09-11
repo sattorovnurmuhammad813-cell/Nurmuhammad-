@@ -22,6 +22,12 @@ export interface CatalogGift {
   resellMinStars: number | null;
   limited: boolean;
   soldOut: boolean;
+  /**
+   * Sovg'aning vizual (stiker) fayli - faqat MTProto orqali yuklab olish uchun,
+   * Bot API bunday collectible gift'larni getAvailableGifts orqali bermaydi
+   * (u faqat oddiy, kollektsion bo'lmagan sovg'alarni qaytaradi).
+   */
+  stickerDocument?: Api.TypeDocument;
 }
 
 let cache: { data: CatalogGift[]; ts: number } | null = null;
@@ -55,10 +61,49 @@ export async function getGiftCatalog(force = false, client?: TelegramClient): Pr
       resellMinStars: g.resellMinStars != null ? Number(g.resellMinStars) : null,
       limited: Boolean(g.limited),
       soldOut: Boolean(g.soldOut),
+      stickerDocument: g.sticker,
     }));
 
   cache = { data, ts: Date.now() };
   return data;
+}
+
+export interface GiftStickerFile {
+  buffer: Buffer;
+  ext: string;
+  mimeType: string;
+}
+
+function extensionForMimeType(mimeType: string): string {
+  if (mimeType === "application/x-tgsticker") return "tgs";
+  if (mimeType === "video/webm") return "webm";
+  if (mimeType === "image/webp") return "webp";
+  return "bin";
+}
+
+/**
+ * Sovg'aning stiker faylini (rasm/animatsiya) MTProto orqali baytlarda yuklab oladi -
+ * bu Bot API orqali to'g'ridan-to'g'ri (file_id bilan) ololmaydigan collectible
+ * gift'lar uchun kerak. Natija keyin Bot API'ga multipart sifatida qayta yuklanadi.
+ * `client` doim berilishi kerak (faqat doimiy ulanishga ega worker muhitida ishlatiladi).
+ */
+export async function downloadGiftSticker(giftId: string, client: TelegramClient): Promise<GiftStickerFile | null> {
+  const catalog = await getGiftCatalog(false, client);
+  const gift = catalog.find((g) => g.id === giftId);
+  const doc = gift?.stickerDocument;
+  if (!doc || doc.className !== "Document") return null;
+
+  try {
+    // teleproto'ning .d.ts fayli xato yozilgan - u faqat Message yoki MessageMedia
+    // qabul qiladi deb ko'rsatadi, lekin amalda (downloads.js) xom Document
+    // obyektini ham to'g'ridan-to'g'ri qabul qiladi (Message'ga o'rashsiz).
+    const buffer = (await client.downloadMedia(doc as unknown as Parameters<typeof client.downloadMedia>[0], {})) as Buffer;
+    if (!buffer || buffer.length === 0) return null;
+    return { buffer, mimeType: doc.mimeType, ext: extensionForMimeType(doc.mimeType) };
+  } catch (err) {
+    console.error(`downloadGiftSticker(${giftId}) xatosi:`, err);
+    return null;
+  }
 }
 
 export async function getFloorPrice(giftId: string): Promise<number | null> {

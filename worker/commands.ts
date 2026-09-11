@@ -4,11 +4,11 @@ import {
   sendKeyboardMessage,
   editMessage,
   answerCallbackQuery,
-  getGiftStickerMap,
-  sendSticker,
+  sendStickerFile,
+  sendDocumentFile,
   type InlineButton,
 } from "../lib/botApi";
-import { getGiftCatalog, type CatalogGift } from "../lib/gifts";
+import { getGiftCatalog, downloadGiftSticker, type CatalogGift } from "../lib/gifts";
 import {
   addTracked,
   removeTracked,
@@ -257,12 +257,18 @@ async function handleCallbackQuery(
 
       await answerCallbackQuery(bot.token, cq.id);
 
-      // Gift rasmini (stikerini) alohida xabar sifatida yuboramiz - eng yaxshi urinish,
-      // topilmasa ham asosiy oqim davom etadi.
+      // Gift rasmini (stikerini) MTProto orqali yuklab, Bot API'ga qayta yuklab
+      // alohida xabar sifatida yuboramiz - eng yaxshi urinish, topilmasa/muvaffaqiyatsiz
+      // bo'lsa ham asosiy oqim (narx tanlash) davom etadi.
       try {
-        const stickerMap = await getGiftStickerMap(bot.token);
-        const fileId = stickerMap.get(giftId);
-        if (fileId) await sendSticker(bot.token, chatId, fileId);
+        const sticker = await downloadGiftSticker(giftId, client);
+        if (sticker) {
+          const filename = `gift.${sticker.ext}`;
+          const sentAsSticker = await sendStickerFile(bot.token, chatId, sticker.buffer, filename);
+          if (!sentAsSticker) {
+            await sendDocumentFile(bot.token, chatId, sticker.buffer, filename);
+          }
+        }
       } catch (err) {
         console.error(`[commands] gift stiker xatosi (${giftId}):`, err);
       }
