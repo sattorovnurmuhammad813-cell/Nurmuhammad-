@@ -1,5 +1,13 @@
 import { TelegramClient } from "teleproto";
-import { sendMessage, sendKeyboardMessage, editMessage, answerCallbackQuery, type InlineButton } from "../lib/botApi";
+import {
+  sendMessage,
+  sendKeyboardMessage,
+  editMessage,
+  answerCallbackQuery,
+  getGiftStickerMap,
+  sendSticker,
+  type InlineButton,
+} from "../lib/botApi";
 import { getGiftCatalog, type CatalogGift } from "../lib/gifts";
 import {
   addTracked,
@@ -10,6 +18,7 @@ import {
   setPendingCustomPrice,
   getPendingCustomPrice,
   clearPendingCustomPrice,
+  type TrackedGift,
 } from "../lib/store";
 import type { BotConfig } from "../lib/bots";
 
@@ -42,17 +51,40 @@ function truncate(s: string, max: number): string {
   return s.length > max ? s.slice(0, max - 1) + "…" : s;
 }
 
-function buildGiftListKeyboard(limited: CatalogGift[], page: number): { text: string; rows: InlineButton[][] } {
+/**
+ * chatning barcha kuzatuvlarini gift_id bo'yicha xaritaga aylantiradi (/giftlar
+ * ro'yxatida qaysi gift allaqachon kuzatuvda ekanini ko'rsatish uchun). Bitta
+ * gift bir necha model bilan kuzatilayotgan bo'lsa - modelsiz (/giftlar orqali
+ * qo'shilgan) yozuv ustunlik qiladi, chunki ro'yxatda bitta chegara ko'rsatiladi.
+ */
+function buildTrackedMap(items: TrackedGift[]): Map<string, TrackedGift> {
+  const map = new Map<string, TrackedGift>();
+  for (const t of items) {
+    const existing = map.get(t.giftId);
+    if (!existing || (existing.model && !t.model)) {
+      map.set(t.giftId, t);
+    }
+  }
+  return map;
+}
+
+function buildGiftListKeyboard(
+  limited: CatalogGift[],
+  page: number,
+  trackedMap: Map<string, TrackedGift>
+): { text: string; rows: InlineButton[][] } {
   const totalPages = Math.max(1, Math.ceil(limited.length / PAGE_SIZE));
   const clampedPage = Math.min(Math.max(page, 0), totalPages - 1);
   const pageItems = limited.slice(clampedPage * PAGE_SIZE, clampedPage * PAGE_SIZE + PAGE_SIZE);
 
-  const rows: InlineButton[][] = pageItems.map((g) => [
-    {
-      text: truncate(g.title, 40) + (g.resellMinStars != null ? ` (${g.resellMinStars}⭐)` : ""),
-      callback_data: `gift:${clampedPage}:${g.id}`,
-    },
-  ]);
+  const rows: InlineButton[][] = pageItems.map((g) => {
+    const floor = g.resellMinStars != null ? `${g.resellMinStars}⭐` : "—";
+    const tracked = trackedMap.get(g.id);
+    const label = tracked
+      ? `${truncate(g.title, 22)} ${floor} / ${tracked.max}⭐✅`
+      : `${truncate(g.title, 32)} ${floor}`;
+    return [{ text: label, callback_data: `gift:${clampedPage}:${g.id}` }];
+  });
 
   const navRow: InlineButton[] = [];
   if (clampedPage > 0) navRow.push({ text: "◀️ Oldingi", callback_data: `pg:${clampedPage - 1}` });
@@ -60,7 +92,7 @@ function buildGiftListKeyboard(limited: CatalogGift[], page: number): { text: st
   if (clampedPage < totalPages - 1) navRow.push({ text: "Keyingi ▶️", callback_data: `pg:${clampedPage + 1}` });
   rows.push(navRow);
 
-  return { text: "🎁 Kuzatish uchun sovg'ani tanlang:", rows };
+  return { text: "🎁 Kuzatish uchun sovg'ani tanlang:\n(narx / sizning chegarangiz ✅)", rows };
 }
 
 async function handleGiftlar(bot: BotConfig, chatId: number, client: TelegramClient): Promise<void> {
@@ -72,7 +104,8 @@ async function handleGiftlar(bot: BotConfig, chatId: number, client: TelegramCli
     return;
   }
 
-  const { text, rows } = buildGiftListKeyboard(limited, 0);
+  const trackedMap = buildTrackedMap(await listTrackedForChat(bot.id, chatId));
+  const { text, rows } = buildGiftListKeyboard(limited, 0, trackedMap);
   await sendKeyboardMessage(bot.token, chatId, text, rows);
 }
 
@@ -206,7 +239,8 @@ async function handleCallbackQuery(
       const page = Number(data.slice(3));
       const catalog = await getGiftCatalog(false, client);
       const limited = catalog.filter((g) => g.limited);
-      const { text, rows } = buildGiftListKeyboard(limited, page);
+      const trackedMap = buildTrackedMap(await listTrackedForChat(bot.id, chatId));
+      const { text, rows } = buildGiftListKeyboard(limited, page, trackedMap);
       await editMessage(bot.token, chatId, messageId, text, rows);
       await answerCallbackQuery(bot.token, cq.id);
       return;
@@ -221,6 +255,18 @@ async function handleCallbackQuery(
         return;
       }
 
+      await answerCallbackQuery(bot.token, cq.id);
+
+      // Gift rasmini (stikerini) alohida xabar sifatida yuboramiz - eng yaxshi urinish,
+      // topilmasa ham asosiy oqim davom etadi.
+      try {
+        const stickerMap = await getGiftStickerMap(bot.token);
+        const fileId = stickerMap.get(giftId);
+        if (fileId) await sendSticker(bot.token, chatId, fileId);
+      } catch (err) {
+        console.error(`[commands] gift stiker xatosi (${giftId}):`, err);
+      }
+
       const priceRow: InlineButton[] = QUICK_PRICES.map((p) => ({
         text: `${p} ⭐`,
         callback_data: `price:${giftId}:${p}`,
@@ -232,15 +278,15 @@ async function handleCallbackQuery(
       ];
       const floor = gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q";
 
-      await editMessage(
+      // Rasm tartibda YUQORIDA ko'rinishi uchun (edit emas) yangi xabar yuboramiz -
+      // shu xabar keyingi narx/orqaga tugmalari uchun "joriy xabar" bo'lib qoladi.
+      await sendKeyboardMessage(
         bot.token,
         chatId,
-        messageId,
         `🎁 <b>${escapeHtml(gift.title)}</b>\nHozirgi floor narx: ${floor}\n\n` +
           `Maksimal narxni tanlang (min ${DEFAULT_MIN_STARS} ⭐ dan boshlab):`,
         rows
       );
-      await answerCallbackQuery(bot.token, cq.id);
       return;
     }
 
