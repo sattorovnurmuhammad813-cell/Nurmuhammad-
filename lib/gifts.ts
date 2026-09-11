@@ -128,6 +128,11 @@ export interface ListingInfo {
 
 function parseUniqueListing(g: Api.TypeStarGift): ListingInfo | null {
   if (g.className !== "StarGiftUnique") return null;
+  // `resellAmount` yulduz narxini o'z ichiga olsa ham, `resaleTonOnly: true`
+  // bo'lsa bu faqat KO'RSATISH uchun hisoblangan ekvivalent - nusxani haqiqatda
+  // faqat TON orqali sotib olish mumkin, yulduzda emas. Shunday e'lonlarni
+  // butunlay chiqarib tashlaymiz (na kuzatuvga, na xabarga tushmasin).
+  if (g.resaleTonOnly) return null;
 
   const priceEntry = (g.resellAmount ?? []).find((a: any) => a.className === "StarsAmount") as any;
   if (!priceEntry) return null;
