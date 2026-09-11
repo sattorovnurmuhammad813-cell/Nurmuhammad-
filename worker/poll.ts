@@ -4,8 +4,17 @@ import { getListingsInRange } from "../lib/gifts";
 import { sendMessage } from "../lib/botApi";
 import { getConfiguredBots } from "../lib/bots";
 import { tryAutoBuy, type AutoBuyResult } from "../lib/purchase";
+import { alertRiskSignal } from "../lib/alerts";
 
-const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS || 1500);
+// Tekshiruv oralig'ini qat'iy sobit qilmasdan, har safar shu oraliqda tasodifiy
+// tanlaymiz - bir xil ritmda ishlashning "robot" izini kamaytirish uchun
+// (tezlikka sezilarli ta'sir qilmaydi, 1500ms o'rtachaga yaqin qoladi).
+const POLL_INTERVAL_MIN_MS = Number(process.env.POLL_INTERVAL_MIN_MS || 1200);
+const POLL_INTERVAL_MAX_MS = Number(process.env.POLL_INTERVAL_MAX_MS || 1800);
+
+function randomPollDelayMs(): number {
+  return POLL_INTERVAL_MIN_MS + Math.floor(Math.random() * (POLL_INTERVAL_MAX_MS - POLL_INTERVAL_MIN_MS + 1));
+}
 
 // --- AVTOMATIK XARID (auto-buy) sozlamalari ---
 // MUHIM: standart holat har doim ENG XAVFSIZ tomonga og'adi:
@@ -97,7 +106,7 @@ async function checkOnce(client: TelegramClient): Promise<void> {
 
 export async function startPollLoop(client: TelegramClient): Promise<void> {
   console.log(
-    `[poll] Tez tekshiruv sikli boshlandi (har ${POLL_INTERVAL_MS}ms). ` +
+    `[poll] Tez tekshiruv sikli boshlandi (${POLL_INTERVAL_MIN_MS}-${POLL_INTERVAL_MAX_MS}ms tasodifiy oraliqda). ` +
       `Avtomatik xarid: ${AUTO_BUY_ENABLED ? (AUTO_BUY_DRY_RUN ? "YOQILGAN (DRY RUN)" : "YOQILGAN (HAQIQIY XARID!)") : "o'chirilgan"}.`
   );
   // eslint-disable-next-line no-constant-condition
@@ -106,7 +115,8 @@ export async function startPollLoop(client: TelegramClient): Promise<void> {
       await checkOnce(client);
     } catch (err) {
       console.error("[poll] xatosi:", err);
+      alertRiskSignal(err, "startPollLoop").catch(() => {});
     }
-    await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS));
+    await new Promise((r) => setTimeout(r, randomPollDelayMs()));
   }
 }

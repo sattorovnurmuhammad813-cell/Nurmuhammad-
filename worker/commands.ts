@@ -28,6 +28,7 @@ import {
   type TrackedGift,
 } from "../lib/store";
 import type { BotConfig } from "../lib/bots";
+import { alertRiskSignal } from "../lib/alerts";
 
 const HELP_TEXT =
   "Salom! Men Telegram kolleksion sovg'alar (gift) bozoridagi narx tushishini kuzataman.\n\n" +
@@ -560,6 +561,7 @@ async function handleCallbackQuery(
     await answerCallbackQuery(bot.token, cq.id);
   } catch (err) {
     console.error(`[commands] callback_query xatosi (bot ${bot.id}):`, err);
+    alertRiskSignal(err, `handleCallbackQuery(bot ${bot.id})`).catch(() => {});
     await answerCallbackQuery(bot.token, cq.id, "Xatolik yuz berdi.").catch(() => {});
   }
 }
@@ -626,6 +628,7 @@ async function handleMessage(bot: BotConfig, chatId: number, text: string, clien
     }
   } catch (err) {
     console.error(`[commands] xatosi (bot ${bot.id}):`, err);
+    alertRiskSignal(err, `handleMessage(bot ${bot.id})`).catch(() => {});
     await sendMessage(bot.token, chatId, "⚠️ Ichki xatolik yuz berdi, keyinroq urinib ko'ring.").catch(() => {});
   }
 }
@@ -679,6 +682,7 @@ export async function startCommandLoop(bot: BotConfig, client: TelegramClient): 
       }
     } catch (err) {
       console.error(`[commands] Bot "${bot.id}" long-polling xatosi:`, err);
+      alertRiskSignal(err, `startCommandLoop(bot ${bot.id})`).catch(() => {});
       await new Promise((r) => setTimeout(r, 3000));
     }
   }

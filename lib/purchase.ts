@@ -1,6 +1,7 @@
 import { Api, TelegramClient } from "teleproto";
 import { Redis } from "@upstash/redis";
 import { withTelegramLock } from "./telegramClient";
+import { alertRiskSignal } from "./alerts";
 
 const redis = Redis.fromEnv();
 
@@ -39,16 +40,22 @@ async function releaseDailySlot(): Promise<void> {
 
 /** Joriy Telegram Stars balansini oladi (payments.GetStarsStatus, o'z akkaunti uchun) */
 export async function getStarsBalance(client?: TelegramClient): Promise<number> {
-  const result: any = await invokeMTProto(
-    (c) =>
-      c.invoke(
-        new (Api.payments as any).GetStarsStatus({
-          peer: new Api.InputPeerSelf(),
-        })
-      ),
-    client
-  );
-  return Number(result?.balance?.amount ?? 0);
+  try {
+    const result: any = await invokeMTProto(
+      (c) =>
+        c.invoke(
+          new (Api.payments as any).GetStarsStatus({
+            peer: new Api.InputPeerSelf(),
+          })
+        ),
+      client
+    );
+    return Number(result?.balance?.amount ?? 0);
+  } catch (err) {
+    console.error("getStarsBalance xatosi:", err);
+    alertRiskSignal(err, "getStarsBalance").catch(() => {});
+    throw err;
+  }
 }
 
 export interface ResaleForm {
@@ -84,6 +91,7 @@ export async function getResaleForm(slug: string, client?: TelegramClient): Prom
     return { formId: result.formId, priceStars, currency: inv?.currency ?? "XTR" };
   } catch (err) {
     console.error(`getResaleForm(${slug}) xatosi:`, err);
+    alertRiskSignal(err, `getResaleForm(${slug})`).catch(() => {});
     return null;
   }
 }
@@ -111,6 +119,7 @@ async function confirmResalePurchase(slug: string, formId: unknown, client?: Tel
     return { ok: false, error: `Kutilmagan javob: ${result.className}` };
   } catch (err: any) {
     console.error(`confirmResalePurchase(${slug}) xatosi:`, err);
+    alertRiskSignal(err, `confirmResalePurchase(${slug})`).catch(() => {});
     return { ok: false, error: err?.errorMessage ?? err?.message ?? String(err) };
   }
 }
@@ -163,7 +172,14 @@ export async function tryAutoBuy(
     return { attempted: false, reason: "daily_limit" };
   }
 
-  const balance = await getStarsBalance(client);
+  let balance: number;
+  try {
+    balance = await getStarsBalance(client);
+  } catch {
+    // getStarsBalance allaqachon xavf signalini yubordi - shu xaridni tashlab,
+    // butun tekshiruv siklini to'xtatmaymiz.
+    return { attempted: false, reason: "form_error" };
+  }
   if (balance < listedPriceStars) {
     return { attempted: false, reason: "insufficient_balance", balance, priceStars: listedPriceStars };
   }

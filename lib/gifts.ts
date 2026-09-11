@@ -1,6 +1,7 @@
 import { Api, TelegramClient } from "teleproto";
 import bigInt from "big-integer";
 import { withTelegramLock } from "./telegramClient";
+import { alertRiskSignal } from "./alerts";
 
 /**
  * Har bir funksiya ixtiyoriy `client` parametrini qabul qiladi. Agar
@@ -177,6 +178,7 @@ export async function getCheapestListing(giftId: string, client?: TelegramClient
     return first ? parseUniqueListing(first) : null;
   } catch (err) {
     console.error(`getCheapestListing(${giftId}) xatosi:`, err);
+    alertRiskSignal(err, `getCheapestListing(${giftId})`).catch(() => {});
     return null;
   }
 }
@@ -227,6 +229,7 @@ export async function getListingsInRange(
     return listings;
   } catch (err) {
     console.error(`getListingsInRange(${giftId}) xatosi:`, err);
+    alertRiskSignal(err, `getListingsInRange(${giftId})`).catch(() => {});
     return [];
   }
 }
@@ -320,6 +323,7 @@ export async function getGiftAttributeOptions(
     return data;
   } catch (err) {
     console.error(`getGiftAttributeOptions(${giftId}) xatosi:`, err);
+    alertRiskSignal(err, `getGiftAttributeOptions(${giftId})`).catch(() => {});
     return cached ?? { models: [], backdrops: [] };
   }
 }
