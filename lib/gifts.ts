@@ -267,6 +267,10 @@ export async function getGiftAttributeOptions(
             sortByPrice: true,
             offset: "",
             limit: 1,
+            // Telegram bu maydon berilmasa (undefined) "attributes" ro'yxatini
+            // umuman qaytarmaydi (faqat "counters"ni beradi) - shu bilan birga
+            // aniq 0 (yoki har qanday eski hash) berilsa, to'liq ro'yxatni beradi.
+            attributesHash: bigInt(0),
           } as any)
         ),
       client
