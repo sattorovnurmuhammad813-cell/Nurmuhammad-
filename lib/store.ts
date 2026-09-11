@@ -86,6 +86,19 @@ export async function removeTracked(
   return removed > 0;
 }
 
+/**
+ * Shu gift_id uchun BARCHA kuzatuvlarni (Model/Backdrop kombinatsiyalaridan
+ * qat'iy nazar) birdaniga o'chiradi - /giftlar'dagi 🗑️ tugmasi uchun.
+ */
+export async function removeAllTrackedForGift(botId: string, chatId: number, giftId: string): Promise<number> {
+  const items = await listTrackedForChat(botId, chatId);
+  const matching = items.filter((t) => t.giftId === giftId);
+  for (const t of matching) {
+    await removeTracked(botId, chatId, giftId, t.model, t.backdrop);
+  }
+  return matching.length;
+}
+
 export async function listTrackedForChat(botId: string, chatId: number): Promise<TrackedGift[]> {
   const raw = await redis.hgetall<Record<string, unknown>>(trackedKey(botId, chatId));
   if (!raw) return [];

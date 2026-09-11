@@ -18,6 +18,7 @@ import {
 import {
   addTracked,
   removeTracked,
+  removeAllTrackedForGift,
   listTrackedForChat,
   setPaused,
   getPausedChats,
@@ -146,8 +147,10 @@ function buildGiftListKeyboard(
   return { text: "🎁 Kuzatish uchun sovg'ani tanlang:\n(narx / sizning chegarangiz ✅)", rows };
 }
 
-/** Gift-detail ekranini (Model/Backdrop holati + narx tugmalari) quradi */
+/** Gift-detail ekranini (Model/Backdrop holati + narx tugmalari + mavjud kuzatuvlar) quradi */
 async function renderGiftDetail(
+  bot: BotConfig,
+  chatId: number,
   client: TelegramClient,
   state: GiftState
 ): Promise<{ text: string; rows: InlineButton[][] } | null> {
@@ -159,13 +162,23 @@ async function renderGiftDetail(
   const selectedModel = state.modelIdx != null ? models[state.modelIdx] : undefined;
   const selectedBackdrop = state.backdropIdx != null ? backdrops[state.backdropIdx] : undefined;
 
+  const trackedForGift = (await listTrackedForChat(bot.id, chatId)).filter((t) => t.giftId === state.giftId);
+
   const floor = gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q";
   const stateStr = stateToStr(state);
+
+  const trackedLines = trackedForGift.map((t) => {
+    const attrs = [t.model && `Model: ${escapeHtml(t.model)}`, t.backdrop && `Backdrop: ${escapeHtml(t.backdrop)}`]
+      .filter(Boolean)
+      .join(", ");
+    return `• ${t.min}-${t.max} ⭐${attrs ? ` (${attrs})` : ""}`;
+  });
 
   const text =
     `🎁 <b>${escapeHtml(gift.title)}</b>\nHozirgi floor narx: ${floor}\n\n` +
     `Model: ${selectedModel ? `<b>${escapeHtml(selectedModel.name)}</b>` : "tanlanmagan"}\n` +
     `Backdrop: ${selectedBackdrop ? `<b>${escapeHtml(selectedBackdrop.name)}</b>` : "tanlanmagan"}\n\n` +
+    (trackedLines.length ? `Joriy kuzatuvlaringiz:\n${trackedLines.join("\n")}\n\n` : "") +
     `Maksimal narxni tanlang (min ${DEFAULT_MIN_STARS} ⭐ dan boshlab):`;
 
   const rows: InlineButton[][] = [
@@ -175,8 +188,18 @@ async function renderGiftDetail(
     ],
     QUICK_PRICES.map((p) => ({ text: `${p} ⭐`, callback_data: `pp:${stateStr}:${p}` })),
     [{ text: "✏️ Boshqa narx kiritish", callback_data: `pc:${stateStr}` }],
-    [{ text: "◀️ Orqaga", callback_data: `pg:${state.listPage}` }],
   ];
+
+  if (trackedForGift.length > 0) {
+    rows.push([
+      {
+        text: `🗑️ Barcha kuzatuvni o'chirish (${trackedForGift.length} ta)`,
+        callback_data: `rm:${state.giftId}:${state.listPage}`,
+      },
+    ]);
+  }
+
+  rows.push([{ text: "◀️ Orqaga", callback_data: `pg:${state.listPage}` }]);
 
   return { text, rows };
 }
@@ -350,6 +373,7 @@ async function handleUntrack(bot: BotConfig, chatId: number, text: string): Prom
  *   pb:<state>:<newBackdropIdx|n>— Backdrop tanlandi, detail ekraniga qaytadi
  *   pp:<state>:<price>           — tezkor narx bilan kuzatuvga qo'shish
  *   pc:<state>                   — "boshqa narx" - keyingi xabarni max narx sifatida kutadi
+ *   rm:<giftId>:<listPage>       — shu gift uchun BARCHA kuzatuvlarni (har qanday Model/Backdrop) o'chiradi
  */
 async function handleCallbackQuery(
   bot: BotConfig,
@@ -380,7 +404,7 @@ async function handleCallbackQuery(
     if (data.startsWith("gift:")) {
       const [, pageStr, giftId] = data.split(":");
       const state: GiftState = { giftId, modelIdx: null, backdropIdx: null, listPage: Number(pageStr) || 0 };
-      const rendered = await renderGiftDetail(client, state);
+      const rendered = await renderGiftDetail(bot, chatId, client, state);
       if (!rendered) {
         await answerCallbackQuery(bot.token, cq.id, "Bu sovg'a topilmadi.");
         return;
@@ -413,7 +437,7 @@ async function handleCallbackQuery(
     if (data.startsWith("d:")) {
       const parts = data.split(":");
       const state = parseGiftState(parts.slice(1, 5));
-      const rendered = await renderGiftDetail(client, state);
+      const rendered = await renderGiftDetail(bot, chatId, client, state);
       if (!rendered) {
         await answerCallbackQuery(bot.token, cq.id, "Bu sovg'a topilmadi.");
         return;
@@ -448,13 +472,27 @@ async function handleCallbackQuery(
         ? { giftId, modelIdx: newIdx, backdropIdx: decodeIdx(parts[3]), listPage }
         : { giftId, modelIdx: decodeIdx(parts[2]), backdropIdx: newIdx, listPage };
 
-      const rendered = await renderGiftDetail(client, state);
+      const rendered = await renderGiftDetail(bot, chatId, client, state);
       if (!rendered) {
         await answerCallbackQuery(bot.token, cq.id, "Bu sovg'a topilmadi.");
         return;
       }
       await editMessage(bot.token, chatId, messageId, rendered.text, rendered.rows);
       await answerCallbackQuery(bot.token, cq.id);
+      return;
+    }
+
+    if (data.startsWith("rm:")) {
+      const [, giftId, listPageStr] = data.split(":");
+      const listPage = Number(listPageStr) || 0;
+      const removed = await removeAllTrackedForGift(bot.id, chatId, giftId);
+
+      const state: GiftState = { giftId, modelIdx: null, backdropIdx: null, listPage };
+      const rendered = await renderGiftDetail(bot, chatId, client, state);
+      if (rendered) {
+        await editMessage(bot.token, chatId, messageId, rendered.text, rendered.rows);
+      }
+      await answerCallbackQuery(bot.token, cq.id, removed > 0 ? `${removed} ta kuzatuv o'chirildi ✅` : "Kuzatuv topilmadi.");
       return;
     }
 
