@@ -24,16 +24,28 @@ export interface BotCommand {
   description: string;
 }
 
-/** Botning "Menu" tugmasidagi buyruqlar ro'yxatini sozlaydi (BotFather'dagi bilan bir xil natija) */
-export async function setMyCommands(token: string, commands: BotCommand[]): Promise<void> {
-  const res = await fetch(`https://api.telegram.org/bot${token}/setMyCommands`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ commands }),
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    console.error(`setMyCommands muvaffaqiyatsiz: ${res.status} ${body}`);
+/**
+ * Botning "Menu" tugmasidagi buyruqlar ro'yxatini sozlaydi (BotFather'dagi bilan
+ * bir xil natija). Muvaffaqiyatli bo'lsa `true`, bo'lmasa `false` qaytaradi -
+ * chaqiruvchi tomon shu orqali qayta urinishi mumkin (avval xato faqat log
+ * qilinib, chaqiruvchiga har doim "muvaffaqiyat" ko'rinardi).
+ */
+export async function setMyCommands(token: string, commands: BotCommand[]): Promise<boolean> {
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/setMyCommands`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ commands }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`setMyCommands muvaffaqiyatsiz: ${res.status} ${body}`);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("setMyCommands tarmoq xatosi:", err);
+    return false;
   }
 }
 
