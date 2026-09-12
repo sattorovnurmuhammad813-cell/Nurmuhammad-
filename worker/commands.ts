@@ -62,6 +62,22 @@ function truncate(s: string, max: number): string {
   return s.length > max ? s.slice(0, max - 1) + "…" : s;
 }
 
+/**
+ * Diagnostika uchun: ichki qadam kutilganidan sekinroq bo'lsa (>300ms) logga
+ * yozadi - shu orqali foydalanuvchi tugma bosganda ANIQ qaysi qadam (katalog,
+ * atributlar, stiker yuklash, Bot API chaqiruvi va h.k.) vaqt yeyayotganini
+ * ko'rish mumkin (muvaffaqiyatli so'rovlar odatda hech narsa loglamaydi).
+ */
+async function timed<T>(label: string, fn: () => Promise<T>): Promise<T> {
+  const start = Date.now();
+  try {
+    return await fn();
+  } finally {
+    const ms = Date.now() - start;
+    if (ms > 300) console.log(`[timing] ${label}: ${ms}ms`);
+  }
+}
+
 function encodeIdx(idx: number | null): string {
   return idx === null ? NONE : String(idx);
 }
@@ -155,15 +171,19 @@ async function renderGiftDetail(
   client: TelegramClient,
   state: GiftState
 ): Promise<{ text: string; rows: InlineButton[][] } | null> {
-  const catalog = await getGiftCatalog(false, client);
+  const catalog = await timed(`renderGiftDetail.getGiftCatalog(${state.giftId})`, () => getGiftCatalog(false, client));
   const gift = catalog.find((g) => g.id === state.giftId);
   if (!gift) return null;
 
-  const { models, backdrops } = await getGiftAttributeOptions(state.giftId, client);
+  const { models, backdrops } = await timed(`renderGiftDetail.getGiftAttributeOptions(${state.giftId})`, () =>
+    getGiftAttributeOptions(state.giftId, client)
+  );
   const selectedModel = state.modelIdx != null ? models[state.modelIdx] : undefined;
   const selectedBackdrop = state.backdropIdx != null ? backdrops[state.backdropIdx] : undefined;
 
-  const trackedForGift = (await listTrackedForChat(bot.id, chatId)).filter((t) => t.giftId === state.giftId);
+  const trackedForGift = (
+    await timed(`renderGiftDetail.listTrackedForChat(${chatId})`, () => listTrackedForChat(bot.id, chatId))
+  ).filter((t) => t.giftId === state.giftId);
 
   const floor = gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q";
   const stateStr = stateToStr(state);
@@ -243,7 +263,7 @@ function buildAttrListKeyboard(
 }
 
 async function handleGiftlar(bot: BotConfig, chatId: number, client: TelegramClient): Promise<void> {
-  const catalog = await getGiftCatalog(false, client);
+  const catalog = await timed("handleGiftlar.getGiftCatalog", () => getGiftCatalog(false, client));
   const limited = catalog.filter((g) => g.limited);
 
   if (limited.length === 0) {
@@ -251,9 +271,11 @@ async function handleGiftlar(bot: BotConfig, chatId: number, client: TelegramCli
     return;
   }
 
-  const trackedMap = buildTrackedMap(await listTrackedForChat(bot.id, chatId));
+  const trackedMap = buildTrackedMap(
+    await timed(`handleGiftlar.listTrackedForChat(${chatId})`, () => listTrackedForChat(bot.id, chatId))
+  );
   const { text, rows } = buildGiftListKeyboard(limited, 0, trackedMap);
-  await sendKeyboardMessage(bot.token, chatId, text, rows);
+  await timed(`handleGiftlar.sendKeyboardMessage(${chatId})`, () => sendKeyboardMessage(bot.token, chatId, text, rows));
 }
 
 async function handleListGifts(bot: BotConfig, chatId: number, client: TelegramClient): Promise<void> {
@@ -419,12 +441,14 @@ async function handleCallbackQuery(
       // alohida xabar sifatida yuboramiz - eng yaxshi urinish, topilmasa/muvaffaqiyatsiz
       // bo'lsa ham asosiy oqim (detail ekrani) davom etadi.
       try {
-        const sticker = await downloadGiftSticker(giftId, client);
+        const sticker = await timed(`gift.downloadGiftSticker(${giftId})`, () => downloadGiftSticker(giftId, client));
         if (sticker) {
           const filename = `gift.${sticker.ext}`;
-          const sentAsSticker = await sendStickerFile(bot.token, chatId, sticker.buffer, filename);
+          const sentAsSticker = await timed(`gift.sendStickerFile(${giftId})`, () =>
+            sendStickerFile(bot.token, chatId, sticker.buffer, filename)
+          );
           if (!sentAsSticker) {
-            await sendDocumentFile(bot.token, chatId, sticker.buffer, filename);
+            await timed(`gift.sendDocumentFile(${giftId})`, () => sendDocumentFile(bot.token, chatId, sticker.buffer, filename));
           }
         }
       } catch (err) {
@@ -635,11 +659,11 @@ async function handleMessage(bot: BotConfig, chatId: number, text: string, clien
 
 interface TgUpdate {
   update_id: number;
-  message?: { text?: string; chat?: { id: number } };
+  message?: { text?: string; chat?: { id: number }; date?: number };
   callback_query?: {
     id: string;
     data?: string;
-    message?: { message_id?: number; chat?: { id?: number } };
+    message?: { message_id?: number; chat?: { id?: number }; date?: number };
   };
 }
 
@@ -672,13 +696,29 @@ export async function startCommandLoop(bot: BotConfig, client: TelegramClient): 
         offset = update.update_id + 1;
 
         if (update.callback_query) {
-          await handleCallbackQuery(bot, update.callback_query, client);
+          const cq = update.callback_query;
+          // Telegram'dan shu yangilanish qachon jo'natilgani bilan biz uni
+          // qachon qabul qilganimiz orasidagi farq - agar shu katta bo'lsa,
+          // muammo BIZNING ishlov berishimizda emas, balki getUpdates/tarmoqda.
+          const lagMs = cq.message?.date ? Date.now() - cq.message.date * 1000 : null;
+          const start = Date.now();
+          await handleCallbackQuery(bot, cq, client);
+          const ms = Date.now() - start;
+          if (ms > 300 || (lagMs != null && lagMs > 1000)) {
+            console.log(`[timing] callback_query "${cq.data}" chat=${cq.message?.chat?.id}: handled in ${ms}ms (arrival lag ${lagMs}ms)`);
+          }
           continue;
         }
 
         const msg = update.message;
         if (!msg?.text || !msg?.chat?.id) continue;
+        const lagMs = msg.date ? Date.now() - msg.date * 1000 : null;
+        const start = Date.now();
         await handleMessage(bot, msg.chat.id, String(msg.text).trim(), client);
+        const ms = Date.now() - start;
+        if (ms > 300 || (lagMs != null && lagMs > 1000)) {
+          console.log(`[timing] message "${msg.text}" chat=${msg.chat.id}: handled in ${ms}ms (arrival lag ${lagMs}ms)`);
+        }
       }
     } catch (err) {
       console.error(`[commands] Bot "${bot.id}" long-polling xatosi:`, err);

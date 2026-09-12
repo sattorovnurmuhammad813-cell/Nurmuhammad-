@@ -81,8 +81,23 @@ export async function removeTracked(
   backdrop?: string
 ): Promise<boolean> {
   const key = trackKeyOf(giftId, model, backdrop);
-  const removed = await redis.hdel(trackedKey(botId, chatId), key);
+  let removed = await redis.hdel(trackedKey(botId, chatId), key);
   await redis.del(notifiedKey(botId, chatId, key));
+
+  // Backdrop qo'llab-quvvatlanishidan OLDIN trackKeyOf faqat "giftId::model"
+  // (pastki registrda, "m=" prefiksisiz) formatidan foydalangan. O'sha davrda
+  // qo'shilgan Model'li yozuvlar hech qachon yangi formatga o'tkazilmagan -
+  // shu sabab ular removeTracked/removeAllTrackedForGift/untrack orqali umuman
+  // o'chmay qolgan edi (kalit hech qachon mos kelmasgani uchun). Backdrop'siz
+  // holatda shu eski formatni ham sinab ko'ramiz - shunda eski yozuvlar ham
+  // muvaffaqiyatli o'chadi.
+  if (model && !backdrop) {
+    const legacyKey = `${giftId}::${model.toLowerCase()}`;
+    const legacyRemoved = await redis.hdel(trackedKey(botId, chatId), legacyKey);
+    await redis.del(notifiedKey(botId, chatId, legacyKey));
+    removed += legacyRemoved;
+  }
+
   return removed > 0;
 }
 
