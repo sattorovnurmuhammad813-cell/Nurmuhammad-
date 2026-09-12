@@ -5,6 +5,7 @@ import { sendMessage } from "../lib/botApi";
 import { getConfiguredBots, type BotConfig } from "../lib/bots";
 import { tryAutoBuy, type AutoBuyResult } from "../lib/purchase";
 import { alertRiskSignal } from "../lib/alerts";
+import { markAlive } from "./watchdog";
 
 // Tekshiruv oralig'ini qat'iy sobit qilmasdan, har safar shu oraliqda tasodifiy
 // tanlaymiz - bir xil ritmda ishlashning "robot" izini kamaytirish uchun
@@ -141,6 +142,7 @@ export async function startPollLoop(client: TelegramClient): Promise<void> {
       console.error("[poll] xatosi:", err);
       alertRiskSignal(err, "startPollLoop").catch(() => {});
     }
+    markAlive("poll");
     await new Promise((r) => setTimeout(r, randomPollDelayMs()));
   }
 }

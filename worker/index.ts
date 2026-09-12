@@ -4,6 +4,7 @@ import { startPollLoop } from "./poll";
 import { startCommandLoop } from "./commands";
 import { getConfiguredBots } from "../lib/bots";
 import { setMyCommands, setChatMenuButton } from "../lib/botApi";
+import { checkForUncleanRestart, registerGracefulShutdown, startStallWatchdog } from "./watchdog";
 
 // Botning "Menu" tugmasidagi ro'yxat - ixcham tutish uchun eng ko'p ishlatiladigan
 // buyruqlar bilan cheklangan (/track, /untrack, /listgifts kabi kamroq ishlatiladiganlari
@@ -64,6 +65,13 @@ async function main() {
     process.exit(1);
   }
 
+  // Oldingi sessiya crash bilan tugagan bo'lsa (pm2 hozir avtomatik qayta
+  // ishga tushirgan bo'lishi mumkin) - shu yerda aniqlanadi va ogohlantirish
+  // yuboriladi. Keyin joriy sessiya uchun "toza to'xtash" kuzatuvi boshlanadi.
+  await checkForUncleanRestart();
+  registerGracefulShutdown();
+  startStallWatchdog();
+
   const client = await getUserClient();
 
   // Har bir bot uchun buyruqlarni tinglash (parallel, bir-biriga xalaqit bermaydi)
@@ -82,6 +90,17 @@ async function main() {
   // Tez narx tekshiruvi (POLL_INTERVAL_MS millisekundda bir marta, standart 1.5s)
   await startPollLoop(client);
 }
+
+// Qo'shimcha xavfsizlik qatlami - asosiy oqimda ushlanmagan xato/rad javob
+// jarayonni jimgina yo'q qilib qo'ymasligi uchun aniq log qoldiradi (haqiqiy
+// foydalanuvchi ogohlantirishi esa keyingi ishga tushishda checkForUncleanRestart
+// orqali yuboriladi - jarayon o'layotgan paytda tarmoq chaqiruvi ishonchli emas).
+process.on("uncaughtException", (err) => {
+  console.error("[index] uncaughtException:", err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[index] unhandledRejection:", reason);
+});
 
 main().catch((err) => {
   console.error("[index] Worker to'xtadi:", err);

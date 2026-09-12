@@ -29,6 +29,7 @@ import {
 } from "../lib/store";
 import { isAllowedChat, type BotConfig } from "../lib/bots";
 import { alertRiskSignal } from "../lib/alerts";
+import { markAlive } from "./watchdog";
 
 const HELP_TEXT =
   "Salom! Men Telegram kolleksion sovg'alar (gift) bozoridagi narx tushishini kuzataman.\n\n" +
@@ -750,5 +751,6 @@ export async function startCommandLoop(bot: BotConfig, client: TelegramClient): 
       alertRiskSignal(err, `startCommandLoop(bot ${bot.id})`).catch(() => {});
       await new Promise((r) => setTimeout(r, 3000));
     }
+    markAlive(`commands:${bot.id}`);
   }
 }
