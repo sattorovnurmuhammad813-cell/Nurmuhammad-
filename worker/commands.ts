@@ -437,12 +437,18 @@ async function handleCallbackQuery(
       const rendered = await renderGiftDetail(bot, chatId, client, state);
       if (!rendered) return;
 
-      // Gift rasmini (stikerini) MTProto orqali yuklab, Bot API'ga qayta yuklab
-      // alohida xabar sifatida yuboramiz - eng yaxshi urinish, topilmasa/muvaffaqiyatsiz
-      // bo'lsa ham asosiy oqim (detail ekrani) davom etadi.
-      try {
-        const sticker = await timed(`gift.downloadGiftSticker(${giftId})`, () => downloadGiftSticker(giftId, client));
-        if (sticker) {
+      // Detail ekranini (tugmalar bilan) DARHOL yuboramiz - shu foydalanuvchi
+      // uchun asosiy qadam (Model/Backdrop/narx tanlash). Stiker rasmini yuklab
+      // yuborish (MTProto download + Bot API upload) o'lchovlarga ko'ra 5-9
+      // soniya cho'zilishi mumkin ekan (log orqali tasdiqlandi) - shuni KUTIB
+      // O'TIRMAYMIZ, aks holda foydalanuvchi tugmalarni soniyalab kuta oladi.
+      // Stiker fon vazifasi sifatida alohida yuboriladi (rasm endi matndan
+      // KEYIN/pastda chiqadi - tezlik cosmetik tartibdan muhimroq).
+      await sendKeyboardMessage(bot.token, chatId, rendered.text, rendered.rows);
+
+      timed(`gift.downloadGiftSticker(${giftId})`, () => downloadGiftSticker(giftId, client))
+        .then(async (sticker) => {
+          if (!sticker) return;
           const filename = `gift.${sticker.ext}`;
           const sentAsSticker = await timed(`gift.sendStickerFile(${giftId})`, () =>
             sendStickerFile(bot.token, chatId, sticker.buffer, filename)
@@ -450,14 +456,10 @@ async function handleCallbackQuery(
           if (!sentAsSticker) {
             await timed(`gift.sendDocumentFile(${giftId})`, () => sendDocumentFile(bot.token, chatId, sticker.buffer, filename));
           }
-        }
-      } catch (err) {
-        console.error(`[commands] gift stiker xatosi (${giftId}):`, err);
-      }
-
-      // Rasm tartibda YUQORIDA ko'rinishi uchun (edit emas) yangi xabar yuboramiz -
-      // shu xabar keyingi Model/Backdrop/narx/orqaga tugmalari uchun "joriy xabar" bo'lib qoladi.
-      await sendKeyboardMessage(bot.token, chatId, rendered.text, rendered.rows);
+        })
+        .catch((err) => {
+          console.error(`[commands] gift stiker xatosi (${giftId}):`, err);
+        });
       return;
     }
 
