@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendMessage } from "./botApi";
 import { getGiftCatalog } from "./gifts";
 import { addTracked, removeTracked, listTrackedForChat, setPaused, getPausedChats } from "./store";
-import type { BotConfig } from "./bots";
+import { isAllowedChat, type BotConfig } from "./bots";
 
 const HELP_TEXT =
   "Salom! Men Telegram kolleksion sovg'alar (gift) bozoridagi narx tushishini kuzataman.\n\n" +
@@ -47,6 +47,12 @@ export async function handleWebhook(req: VercelRequest, res: VercelResponse, bot
 
   const chatId: number = msg.chat.id;
   const text: string = String(msg.text).trim();
+
+  if (!isAllowedChat(chatId)) {
+    // Ruxsat etilmagan chat - jimgina e'tiborsiz qoldiramiz
+    res.status(200).json({ ok: true });
+    return;
+  }
 
   try {
     if (text === "/start" || text === "/help") {

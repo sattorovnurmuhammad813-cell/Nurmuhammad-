@@ -27,7 +27,7 @@ import {
   clearPendingCustomPrice,
   type TrackedGift,
 } from "../lib/store";
-import type { BotConfig } from "../lib/bots";
+import { isAllowedChat, type BotConfig } from "../lib/bots";
 import { alertRiskSignal } from "../lib/alerts";
 
 const HELP_TEXT =
@@ -713,6 +713,14 @@ export async function startCommandLoop(bot: BotConfig, client: TelegramClient): 
 
         if (update.callback_query) {
           const cq = update.callback_query;
+
+          if (!isAllowedChat(cq.message?.chat?.id)) {
+            // Ruxsat etilmagan chat - jimgina e'tiborsiz qoldiramiz, faqat
+            // tugmadagi "yuklanmoqda" holatini to'xtatish uchun javob beramiz.
+            await answerCallbackQuery(bot.token, cq.id).catch(() => {});
+            continue;
+          }
+
           // Telegram'dan shu yangilanish qachon jo'natilgani bilan biz uni
           // qachon qabul qilganimiz orasidagi farq - agar shu katta bo'lsa,
           // muammo BIZNING ishlov berishimizda emas, balki getUpdates/tarmoqda.
@@ -728,6 +736,7 @@ export async function startCommandLoop(bot: BotConfig, client: TelegramClient): 
 
         const msg = update.message;
         if (!msg?.text || !msg?.chat?.id) continue;
+        if (!isAllowedChat(msg.chat.id)) continue; // ruxsat etilmagan chat - jimgina e'tiborsiz qoldiramiz
         const lagMs = msg.date ? Date.now() - msg.date * 1000 : null;
         const start = Date.now();
         await handleMessage(bot, msg.chat.id, String(msg.text).trim(), client);
