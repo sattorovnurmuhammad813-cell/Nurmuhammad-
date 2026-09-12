@@ -147,7 +147,10 @@ function buildGiftListKeyboard(
   const pageItems = limited.slice(clampedPage * PAGE_SIZE, clampedPage * PAGE_SIZE + PAGE_SIZE);
 
   const rows: InlineButton[][] = pageItems.map((g) => {
-    const floor = g.resellMinStars != null ? `${g.resellMinStars}⭐` : "—";
+    // "~" - bu narx katalogdan (barcha e'lonlar, jumladan faqat TON orqali
+    // sotib olinadigan bo'lsa ham), aniq (starsOnly) narxni ko'rish uchun
+    // gift ustiga bosing - detail ekranida haqiqiy "Hozirgi floor narx" chiqadi.
+    const floor = g.resellMinStars != null ? `~${g.resellMinStars}⭐` : "—";
     const tracked = trackedMap.get(g.id);
     const label = tracked
       ? `${truncate(g.title, 22)} ${floor} / ${tracked.max}⭐✅`
@@ -161,7 +164,12 @@ function buildGiftListKeyboard(
   if (clampedPage < totalPages - 1) navRow.push({ text: "Keyingi ▶️", callback_data: `pg:${clampedPage + 1}` });
   rows.push(navRow);
 
-  return { text: "🎁 Kuzatish uchun sovg'ani tanlang:\n(narx / sizning chegarangiz ✅)", rows };
+  return {
+    text:
+      "🎁 Kuzatish uchun sovg'ani tanlang:\n(narx / sizning chegarangiz ✅)\n" +
+      "~narx taxminiy (TON e'lonlarini ham qamrab olishi mumkin) - aniq narx uchun gift ustiga bosing.",
+    rows,
+  };
 }
 
 /** Gift-detail ekranini (Model/Backdrop holati + narx tugmalari + mavjud kuzatuvlar) quradi */
@@ -175,8 +183,9 @@ async function renderGiftDetail(
   const gift = catalog.find((g) => g.id === state.giftId);
   if (!gift) return null;
 
-  const { models, backdrops } = await timed(`renderGiftDetail.getGiftAttributeOptions(${state.giftId})`, () =>
-    getGiftAttributeOptions(state.giftId, client)
+  const { models, backdrops, starsFloor } = await timed(
+    `renderGiftDetail.getGiftAttributeOptions(${state.giftId})`,
+    () => getGiftAttributeOptions(state.giftId, client)
   );
   const selectedModel = state.modelIdx != null ? models[state.modelIdx] : undefined;
   const selectedBackdrop = state.backdropIdx != null ? backdrops[state.backdropIdx] : undefined;
@@ -185,7 +194,11 @@ async function renderGiftDetail(
     await timed(`renderGiftDetail.listTrackedForChat(${chatId})`, () => listTrackedForChat(bot.id, chatId))
   ).filter((t) => t.giftId === state.giftId);
 
-  const floor = gift.resellMinStars != null ? `${gift.resellMinStars} ⭐` : "resale yo'q";
+  // starsFloor - faqat yulduzda sotib olinadigan e'lonlar orasidan hisoblangan
+  // haqiqiy eng arzon narx (starsOnly:true). Katalogdagi gift.resellMinStars
+  // TON-only e'lonlarni ham hisobga olib, buni pastroq (noto'g'ri) ko'rsatishi
+  // mumkin - shu sabab shu yerda ustunlik starsFloor'ga beriladi.
+  const floor = starsFloor != null ? `${starsFloor} ⭐` : gift.resellMinStars != null ? `~${gift.resellMinStars} ⭐ (TON bilan)` : "resale yo'q";
   const stateStr = stateToStr(state);
 
   const trackedLines = trackedForGift.map((t) => {
@@ -288,7 +301,7 @@ async function handleListGifts(bot: BotConfig, chatId: number, client: TelegramC
   }
 
   const lines = limited.slice(0, 60).map((g) => {
-    const floor = g.resellMinStars != null ? `${g.resellMinStars} ⭐` : "resale yo'q";
+    const floor = g.resellMinStars != null ? `~${g.resellMinStars} ⭐` : "resale yo'q";
     return `<code>${g.id}</code> — ${escapeHtml(g.title)} (floor: ${floor})`;
   });
 
@@ -296,6 +309,7 @@ async function handleListGifts(bot: BotConfig, chatId: number, client: TelegramC
     bot.token,
     chatId,
     `Kolleksion sovg'alar (ID — nomi — hozirgi eng arzon narxi):\n\n${lines.join("\n")}\n\n` +
+      `~narx taxminiy (TON e'lonlarini ham qamrab olishi mumkin) - aniq (faqat yulduzda sotib olinadigan) narxni /giftlar orqali gift tanlab ko'ring.\n\n` +
       `Kuzatish uchun: /track &lt;gift_id&gt; &lt;min&gt; &lt;max&gt; (yoki /giftlar orqali tugmalar bilan)`
   );
 }

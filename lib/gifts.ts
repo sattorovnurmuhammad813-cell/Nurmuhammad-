@@ -216,6 +216,7 @@ export async function getCheapestListing(giftId: string, client?: TelegramClient
             new Api.payments.GetResaleStarGifts({
               giftId: bigInt(giftId),
               sortByPrice: true,
+              starsOnly: true,
               offset: "",
               limit: 1,
             } as any)
@@ -253,6 +254,15 @@ export async function fetchResaleListings(
           new Api.payments.GetResaleStarGifts({
             giftId: bigInt(giftId),
             sortByPrice: true,
+            // Telegram'ning o'zining "Show listings for Stars only" filtriga mos
+            // keladigan so'rov bayrog'i - shu bermasak, natijaga faqat TON orqali
+            // sotib olinadigan e'lonlar ham (ularning yulduzdagi taxminiy narxi
+            // bilan) aralashib ketadi. `resaleTonOnly` mijoz tomonidagi tekshiruvi
+            // shu bayroqsiz ham to'g'ri ishlaydi, lekin bu - Telegram'ning o'zi
+            // tasdiqlagan, birlamchi manba (haqiqiy sinovda tasdiqlandi: Light
+            // Sword uchun starsOnly:true bilan eng arzon narx 847⭐, holbuki
+            // starsOnly bermasak 635⭐ (TON-only) natija birinchi bo'lib chiqadi).
+            starsOnly: true,
             offset: "",
             limit: fetchLimit,
           } as any)
@@ -330,6 +340,13 @@ export interface GiftAttributeOption {
 interface AttrCacheEntry {
   models: GiftAttributeOption[];
   backdrops: GiftAttributeOption[];
+  /**
+   * Shu gift uchun HAQIQATDA yulduzda sotib olsa bo'ladigan eng arzon narx
+   * (starsOnly:true bilan olingan) - katalogdagi `resellMinStars` bundan farqli
+   * o'laroq TON-only e'lonlarni ham hisobga olib, ancha PASTROQ (noto'g'ri)
+   * raqam ko'rsatishi mumkin (tasdiqlangan: Light Sword uchun 635 vs haqiqiy 847).
+   */
+  starsFloor: number | null;
   ts: number;
 }
 
@@ -353,6 +370,11 @@ async function fetchGiftAttributeOptions(giftId: string, client?: TelegramClient
             new Api.payments.GetResaleStarGifts({
               giftId: bigInt(giftId),
               sortByPrice: true,
+              // Xuddi fetchResaleListings'dagidek - TON-only e'lonlarni chiqarib
+              // tashlaydi, shunda gifts[0] (limit:1, narx bo'yicha o'sish
+              // tartibida) HAQIQATDA yulduzda sotib olinadigan eng arzon narxni
+              // beradi ("Hozirgi floor narx" shu yerdan olinadi).
+              starsOnly: true,
               offset: "",
               limit: 1,
               // Telegram bu maydon berilmasa (undefined) "attributes" ro'yxatini
@@ -366,8 +388,11 @@ async function fetchGiftAttributeOptions(giftId: string, client?: TelegramClient
     );
 
     if (result.className !== "payments.ResaleStarGifts") {
-      return cached ?? { models: [], backdrops: [], ts: Date.now() };
+      return cached ?? { models: [], backdrops: [], starsFloor: null, ts: Date.now() };
     }
+
+    const cheapest = result.gifts[0] ? parseUniqueListing(result.gifts[0]) : null;
+    const starsFloor = cheapest?.priceStars ?? null;
 
     const attrs = (result.attributes ?? []) as any[];
     const counters = (result.counters ?? []) as any[];
@@ -399,13 +424,13 @@ async function fetchGiftAttributeOptions(giftId: string, client?: TelegramClient
     models.sort((x, y) => x.name.localeCompare(y.name));
     backdrops.sort((x, y) => x.name.localeCompare(y.name));
 
-    const data = { models, backdrops, ts: Date.now() };
+    const data = { models, backdrops, starsFloor, ts: Date.now() };
     attrCache.set(giftId, data);
     return data;
   } catch (err) {
     console.error(`getGiftAttributeOptions(${giftId}) xatosi:`, err);
     alertRiskSignal(err, `getGiftAttributeOptions(${giftId})`).catch(() => {});
-    return cached ?? { models: [], backdrops: [], ts: Date.now() };
+    return cached ?? { models: [], backdrops: [], starsFloor: null, ts: Date.now() };
   }
 }
 
@@ -419,7 +444,7 @@ async function fetchGiftAttributeOptions(giftId: string, client?: TelegramClient
 export async function getGiftAttributeOptions(
   giftId: string,
   client?: TelegramClient
-): Promise<{ models: GiftAttributeOption[]; backdrops: GiftAttributeOption[] }> {
+): Promise<{ models: GiftAttributeOption[]; backdrops: GiftAttributeOption[]; starsFloor: number | null }> {
   const cached = attrCache.get(giftId);
 
   if (cached) {
