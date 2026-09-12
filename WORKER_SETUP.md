@@ -105,10 +105,17 @@ tushiramiz).
 
 ```bash
 sudo npm install -g pm2
-pm2 start npm --name giftbot-worker -- run worker
+pm2 start node_modules/.bin/ts-node --name giftbot-worker --interpreter node -- worker/index.ts
 pm2 save
 pm2 startup
 ```
+
+MUHIM: `pm2 start npm -- run worker` EMAS, aynan `ts-node`ni to'g'ridan-to'g'ri
+ishga tushiring. `npm run worker` orqali ishga tushirilsa, pm2 aslida `npm`
+jarayonini boshqaradi, haqiqiy kod esa uning FARZAND jarayonida ishlaydi -
+pm2'ning `restart`/`stop` signali shu farzandgacha ishonchli yetib bormaydi,
+natijada worker ichidagi "toza to'xtash" aniqlagichi (watchdog) har bir oddiy
+qayta ishga tushirishni ham "kutilmagan crash" deb xato signal beradi.
 
 `pm2 startup` buyrug'i ekranga yana bir buyruq chiqaradi (masalan
 `sudo env PATH=... pm2 startup systemd -u ubuntu --hp /home/ubuntu`) -
