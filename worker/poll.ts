@@ -1,8 +1,8 @@
 import { TelegramClient } from "teleproto";
-import { getAllTracked, getNotifiedSlugs, markSlugsNotified, getPausedChats } from "../lib/store";
-import { getListingsInRange } from "../lib/gifts";
+import { getAllTracked, getNotifiedSlugs, markSlugsNotified, getPausedChats, type TrackedGift } from "../lib/store";
+import { fetchResaleListings, filterListings, type ListingInfo } from "../lib/gifts";
 import { sendMessage } from "../lib/botApi";
-import { getConfiguredBots } from "../lib/bots";
+import { getConfiguredBots, type BotConfig } from "../lib/bots";
 import { tryAutoBuy, type AutoBuyResult } from "../lib/purchase";
 import { alertRiskSignal } from "../lib/alerts";
 
@@ -45,17 +45,41 @@ function formatAutoBuyLine(r: AutoBuyResult): string | null {
 async function checkOnce(client: TelegramClient): Promise<void> {
   const bots = getConfiguredBots();
 
+  // Har bir bot+chat+kuzatuvni bitta ro'yxatga yig'amiz, so'ng giftId bo'yicha
+  // guruhlaymiz - bir nechta kuzatuv (turli chat/Model/Backdrop) bitta giftId'ga
+  // ishora qilishi mumkin, shunda ularning barchasiga BITTA MTProto so'rovi
+  // yetadi (oldin har bir kuzatuv uchun alohida so'rov yuborilar, bu esa
+  // ulanishni band qilib, /giftlar va Menu buyruqlariga javobni sekinlashtirardi).
+  const entriesByGift = new Map<string, { bot: BotConfig; t: TrackedGift }[]>();
   for (const bot of bots) {
     const tracked = await getAllTracked(bot.id);
     const pausedChats = await getPausedChats(bot.id);
     const active = tracked.filter((t) => !pausedChats.has(String(t.chatId)));
 
     for (const t of active) {
-      const listings = await getListingsInRange(t.giftId, t.min, t.max, t.model, t.backdrop, 100, client);
-      if (listings.length === 0) continue;
+      const list = entriesByGift.get(t.giftId);
+      if (list) list.push({ bot, t });
+      else entriesByGift.set(t.giftId, [{ bot, t }]);
+    }
+  }
+
+  for (const [giftId, entries] of entriesByGift) {
+    let listings: ListingInfo[];
+    try {
+      listings = await fetchResaleListings(giftId, 100, client);
+    } catch (err) {
+      console.error(`[poll] fetchResaleListings(${giftId}) xatosi:`, err);
+      alertRiskSignal(err, `checkOnce.fetchResaleListings(${giftId})`).catch(() => {});
+      continue;
+    }
+    if (listings.length === 0) continue;
+
+    for (const { bot, t } of entries) {
+      const filtered = filterListings(listings, t.min, t.max, t.model, t.backdrop);
+      if (filtered.length === 0) continue;
 
       const alreadyNotified = await getNotifiedSlugs(bot.id, t.chatId, t.giftId, t.model, t.backdrop);
-      const newListings = listings.filter((l) => !alreadyNotified.has(l.slug));
+      const newListings = filtered.filter((l) => !alreadyNotified.has(l.slug));
       if (newListings.length === 0) continue;
 
       for (const listing of newListings) {

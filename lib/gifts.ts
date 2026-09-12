@@ -35,17 +35,13 @@ let cache: { data: CatalogGift[]; ts: number } | null = null;
 // Bir necha so'rov (webhook + check-gifts) bir vaqtda kelib qolsa, MTProto'ga
 // ortiqcha yuk tushmasligi uchun juda qisqa muddatli kesh.
 const CACHE_MS = 15_000;
+// Kesh eskirganda ham darhol (stale) natijani qaytarib, yangilanishni FONDA
+// boshlaymiz - shu bilan /giftlar va Menu buyruqlari hech qachon jonli MTProto
+// so'rovini kutib turmaydi (bu narx tekshiruv siklining band ulanishidan
+// kutilmagan sekinlik keltirib chiqarardi).
+let refreshPromise: Promise<CatalogGift[]> | null = null;
 
-/**
- * Telegram'ning barcha kolleksion (limited) sovg'alar katalogini oladi.
- * `resellMinStars` maydoni aynan bozordagi "floor" (eng arzon) narx bo'lib,
- * har bir sovg'a uchun alohida so'rov yubormasdan bitta chaqiruvda barchasini beradi.
- */
-export async function getGiftCatalog(force = false, client?: TelegramClient): Promise<CatalogGift[]> {
-  if (!force && cache && Date.now() - cache.ts < CACHE_MS) {
-    return cache.data;
-  }
-
+async function fetchCatalog(client?: TelegramClient): Promise<CatalogGift[]> {
   const result = await invokeMTProto((c) => c.invoke(new Api.payments.GetStarGifts({ hash: 0 })), client);
 
   if (result.className !== "payments.StarGifts") {
@@ -67,6 +63,34 @@ export async function getGiftCatalog(force = false, client?: TelegramClient): Pr
 
   cache = { data, ts: Date.now() };
   return data;
+}
+
+/**
+ * Telegram'ning barcha kolleksion (limited) sovg'alar katalogini oladi.
+ * `resellMinStars` maydoni aynan bozordagi "floor" (eng arzon) narx bo'lib,
+ * har bir sovg'a uchun alohida so'rov yubormasdan bitta chaqiruvda barchasini beradi.
+ */
+export async function getGiftCatalog(force = false, client?: TelegramClient): Promise<CatalogGift[]> {
+  if (force) {
+    return fetchCatalog(client);
+  }
+
+  if (cache) {
+    if (Date.now() - cache.ts >= CACHE_MS && !refreshPromise) {
+      refreshPromise = fetchCatalog(client)
+        .catch((err) => {
+          console.error("getGiftCatalog fon yangilanishi xatosi:", err);
+          return cache!.data;
+        })
+        .finally(() => {
+          refreshPromise = null;
+        });
+    }
+    return cache.data;
+  }
+
+  // Sovuq boshlanish - keshda hech narsa yo'q, majburan kutamiz
+  return fetchCatalog(client);
 }
 
 export interface GiftStickerFile {
@@ -184,49 +208,79 @@ export async function getCheapestListing(giftId: string, client?: TelegramClient
 }
 
 /**
+ * Shu gift uchun bozordagi barcha takliflarni (narx bo'yicha o'sish tartibida,
+ * TON-only e'lonlarsiz) xom holda oladi - hech qanday min/max/Model/Backdrop
+ * filtrisiz. Bir nechta kuzatuv (turli chat/Model/Backdrop) bitta giftId'ga
+ * ishora qilsa, shu funksiya orqali BITTA MTProto so'rovi barchasiga
+ * yetadi - `filterListings` bilan har biriga alohida qo'llaniladi.
+ */
+export async function fetchResaleListings(
+  giftId: string,
+  fetchLimit = 100,
+  client?: TelegramClient
+): Promise<ListingInfo[]> {
+  const result = await invokeMTProto(
+    (c) =>
+      c.invoke(
+        new Api.payments.GetResaleStarGifts({
+          giftId: bigInt(giftId),
+          sortByPrice: true,
+          offset: "",
+          limit: fetchLimit,
+        } as any)
+      ),
+    client
+  );
+
+  if (result.className !== "payments.ResaleStarGifts") return [];
+
+  const listings: ListingInfo[] = [];
+  for (const g of result.gifts) {
+    const listing = parseUniqueListing(g);
+    if (listing) listings.push(listing);
+  }
+  return listings;
+}
+
+/** `fetchResaleListings` natijasidan [minStars, maxStars] va ixtiyoriy Model/Backdrop bo'yicha filtrlaydi */
+export function filterListings(
+  listings: ListingInfo[],
+  minStars: number,
+  maxStars: number,
+  model?: string,
+  backdrop?: string
+): ListingInfo[] {
+  const modelLower = model?.toLowerCase();
+  const backdropLower = backdrop?.toLowerCase();
+  const result: ListingInfo[] = [];
+  for (const listing of listings) {
+    if (listing.priceStars > maxStars) break; // kirish ro'yxati narx bo'yicha o'sish tartibida
+    if (modelLower && listing.model?.toLowerCase() !== modelLower) continue;
+    if (backdropLower && listing.backdrop?.toLowerCase() !== backdropLower) continue;
+    if (listing.priceStars >= minStars) result.push(listing);
+  }
+  return result;
+}
+
+/**
  * [minStars, maxStars] oralig'idagi barcha bozor takliflarini (nusxalarini) oladi
  * (narx bo'yicha o'sish tartibida, maxStars'dan oshgach to'xtaydi). `fetchLimit` -
  * bir chaqiruvda so'raladigan maksimal nusxa soni (xavfsizlik uchun cheklov).
+ * Faqat BITTA kuzatuvni tekshirish uchun qulay qisqa yo'l - bir nechtasi uchun
+ * `fetchResaleListings` + `filterListings`dan foydalaning (bitta MTProto so'rovi kifoya).
  */
 export async function getListingsInRange(
   giftId: string,
   minStars: number,
   maxStars: number,
-  /** Berilsa, faqat shu Model nomiga (katta-kichik harflarga sezgir emas) ega nusxalar qaytariladi */
   model?: string,
-  /** Berilsa, faqat shu Backdrop nomiga (katta-kichik harflarga sezgir emas) ega nusxalar qaytariladi */
   backdrop?: string,
   fetchLimit = 100,
   client?: TelegramClient
 ): Promise<ListingInfo[]> {
   try {
-    const result = await invokeMTProto(
-      (c) =>
-        c.invoke(
-          new Api.payments.GetResaleStarGifts({
-            giftId: bigInt(giftId),
-            sortByPrice: true,
-            offset: "",
-            limit: fetchLimit,
-          } as any)
-        ),
-      client
-    );
-
-    if (result.className !== "payments.ResaleStarGifts") return [];
-
-    const modelLower = model?.toLowerCase();
-    const backdropLower = backdrop?.toLowerCase();
-    const listings: ListingInfo[] = [];
-    for (const g of result.gifts) {
-      const listing = parseUniqueListing(g);
-      if (!listing) continue;
-      if (listing.priceStars > maxStars) break; // narx bo'yicha o'sish tartibida - keyingilari ham oshiq bo'ladi
-      if (modelLower && listing.model?.toLowerCase() !== modelLower) continue;
-      if (backdropLower && listing.backdrop?.toLowerCase() !== backdropLower) continue;
-      if (listing.priceStars >= minStars) listings.push(listing);
-    }
-    return listings;
+    const listings = await fetchResaleListings(giftId, fetchLimit, client);
+    return filterListings(listings, minStars, maxStars, model, backdrop);
   } catch (err) {
     console.error(`getListingsInRange(${giftId}) xatosi:`, err);
     alertRiskSignal(err, `getListingsInRange(${giftId})`).catch(() => {});
@@ -244,28 +298,24 @@ export interface GiftAttributeOption {
   backdropId?: number;
 }
 
-let attrCache: Map<string, { models: GiftAttributeOption[]; backdrops: GiftAttributeOption[]; ts: number }> =
-  new Map();
+interface AttrCacheEntry {
+  models: GiftAttributeOption[];
+  backdrops: GiftAttributeOption[];
+  ts: number;
+}
+
+let attrCache: Map<string, AttrCacheEntry> = new Map();
 // Model/backdrop TO'PLAMI (qaysi variantlar umuman mavjud) narxlardan farqli o'laroq
 // tez-tez o'zgarmaydi - shuning uchun ancha uzoqroq keshlanadi. Bu /giftlar
 // menyusida bir necha bosqichli tanlov (Model -> Backdrop -> narx) davomida
 // indekslar (ro'yxatdagi tartib raqami) o'zgarib ketmasligi uchun ham muhim.
 const ATTR_CACHE_MS = 5 * 60_000;
+// giftId bo'yicha fon-yangilanish davom etayotganini belgilaydi - bir vaqtda
+// bir xil gift uchun bir nechta MTProto so'rovi qatorlashib ketmasligi uchun.
+const attrRefreshing = new Set<string>();
 
-/**
- * Shu gift uchun bozorda mavjud barcha Model va Backdrop variantlarini (nomi va
- * shu variantga ega hozirgi takliflar soni bilan) oladi - /giftlar menyusidagi
- * "Model" va "Backdrop" tanlov ro'yxatlari uchun.
- */
-export async function getGiftAttributeOptions(
-  giftId: string,
-  client?: TelegramClient
-): Promise<{ models: GiftAttributeOption[]; backdrops: GiftAttributeOption[] }> {
+async function fetchGiftAttributeOptions(giftId: string, client?: TelegramClient): Promise<AttrCacheEntry> {
   const cached = attrCache.get(giftId);
-  if (cached && Date.now() - cached.ts < ATTR_CACHE_MS) {
-    return cached;
-  }
-
   try {
     const result = await invokeMTProto(
       (c) =>
@@ -285,7 +335,7 @@ export async function getGiftAttributeOptions(
     );
 
     if (result.className !== "payments.ResaleStarGifts") {
-      return cached ?? { models: [], backdrops: [] };
+      return cached ?? { models: [], backdrops: [], ts: Date.now() };
     }
 
     const attrs = (result.attributes ?? []) as any[];
@@ -324,6 +374,31 @@ export async function getGiftAttributeOptions(
   } catch (err) {
     console.error(`getGiftAttributeOptions(${giftId}) xatosi:`, err);
     alertRiskSignal(err, `getGiftAttributeOptions(${giftId})`).catch(() => {});
-    return cached ?? { models: [], backdrops: [] };
+    return cached ?? { models: [], backdrops: [], ts: Date.now() };
   }
+}
+
+/**
+ * Shu gift uchun bozorda mavjud barcha Model va Backdrop variantlarini (nomi va
+ * shu variantga ega hozirgi takliflar soni bilan) oladi - /giftlar menyusidagi
+ * "Model" va "Backdrop" tanlov ro'yxatlari uchun. Kesh eskirgan bo'lsa ham,
+ * mavjud bo'lsa darhol shu eski qiymatni qaytaradi va yangilanishni fonda
+ * boshlaydi - foydalanuvchi tugma bosganda MTProto javobini kutib turmaydi.
+ */
+export async function getGiftAttributeOptions(
+  giftId: string,
+  client?: TelegramClient
+): Promise<{ models: GiftAttributeOption[]; backdrops: GiftAttributeOption[] }> {
+  const cached = attrCache.get(giftId);
+
+  if (cached) {
+    if (Date.now() - cached.ts >= ATTR_CACHE_MS && !attrRefreshing.has(giftId)) {
+      attrRefreshing.add(giftId);
+      fetchGiftAttributeOptions(giftId, client).finally(() => attrRefreshing.delete(giftId));
+    }
+    return cached;
+  }
+
+  // Sovuq boshlanish - keshda hech narsa yo'q, majburan kutamiz
+  return fetchGiftAttributeOptions(giftId, client);
 }

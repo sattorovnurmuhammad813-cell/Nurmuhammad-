@@ -488,12 +488,16 @@ async function handleCallbackQuery(
       const listPage = Number(listPageStr) || 0;
       const removed = await removeAllTrackedForGift(bot.id, chatId, giftId);
 
+      // O'chirish (Redis) allaqachon tugadi - tugmadagi "yuklanmoqda" holatini
+      // darhol to'xtatamiz, ekranni qayta chizish (MTProto + Bot API) sal
+      // ko'proq vaqt olsa ham foydalanuvchi o'chirilganini shu zahoti ko'radi.
+      await answerCallbackQuery(bot.token, cq.id, removed > 0 ? `${removed} ta kuzatuv o'chirildi ✅` : "Kuzatuv topilmadi.");
+
       const state: GiftState = { giftId, modelIdx: null, backdropIdx: null, listPage };
       const rendered = await renderGiftDetail(bot, chatId, client, state);
       if (rendered) {
         await editMessage(bot.token, chatId, messageId, rendered.text, rendered.rows);
       }
-      await answerCallbackQuery(bot.token, cq.id, removed > 0 ? `${removed} ta kuzatuv o'chirildi ✅` : "Kuzatuv topilmadi.");
       return;
     }
 
