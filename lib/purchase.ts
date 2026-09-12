@@ -11,7 +11,7 @@ async function invokeMTProto<T>(fn: (client: TelegramClient) => Promise<T>, clie
 
 // --- Kunlik xarid limiti (butun akkaunt bo'yicha, hamma bot/chat uchun umumiy -
 // chunki xarid bitta MTProto akkauntning yulduzlari bilan qilinadi) ---
-const DAILY_LIMIT = 1;
+const DAILY_LIMIT = 2;
 const DAILY_KEY = "gifts:autobuy:daily_count";
 const DAILY_TTL_SEC = 24 * 60 * 60;
 
