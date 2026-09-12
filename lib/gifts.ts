@@ -14,6 +14,31 @@ async function invokeMTProto<T>(fn: (client: TelegramClient) => Promise<T>, clie
   return client ? fn(client) : withTelegramLock(fn);
 }
 
+/**
+ * `payments.GetResaleStarGifts` (narx tekshiruvi HAM /giftlar'dagi Model/Backdrop
+ * ro'yxati HAM shu metoddan foydalanadi) uchun umumiy tezlik cheklovi. Ko'p sonli
+ * kuzatuv har biri o'z gift_id'i bilan har poll siklida alohida chaqirilsa,
+ * Telegram tez orada FLOOD_WAIT bilan bloklaydi - va bu blok BUTUN hisobga,
+ * demak /giftlar tugmalariga ham tegadi (kuzatilgan holat: soatlab deyarli
+ * uzluksiz ~24s flood-wait uyqusi, shu sabab tugmalar javob berolmay qolgan).
+ * Shu yerda BARCHA chaqiruvchilar (poll.ts va getGiftAttributeOptions) ketma-ket
+ * navbatga qo'yiladi va ular orasida kamida RESALE_MIN_GAP_MS oraliq saqlanadi -
+ * shunda flood-wait umuman kelib chiqmaydi.
+ */
+const RESALE_MIN_GAP_MS = Number(process.env.RESALE_MIN_GAP_MS || 1500);
+let resaleLastCallAt = 0;
+let resaleQueue: Promise<void> = Promise.resolve();
+
+function throttleResaleCall<T>(fn: () => Promise<T>): Promise<T> {
+  const turn = resaleQueue.then(async () => {
+    const wait = resaleLastCallAt + RESALE_MIN_GAP_MS - Date.now();
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    resaleLastCallAt = Date.now();
+  });
+  resaleQueue = turn.catch(() => {});
+  return turn.then(fn);
+}
+
 export interface CatalogGift {
   id: string;
   title: string;
@@ -184,17 +209,19 @@ function parseUniqueListing(g: Api.TypeStarGift): ListingInfo | null {
  */
 export async function getCheapestListing(giftId: string, client?: TelegramClient): Promise<ListingInfo | null> {
   try {
-    const result = await invokeMTProto(
-      (c) =>
-        c.invoke(
-          new Api.payments.GetResaleStarGifts({
-            giftId: bigInt(giftId),
-            sortByPrice: true,
-            offset: "",
-            limit: 1,
-          } as any)
-        ),
-      client
+    const result = await throttleResaleCall(() =>
+      invokeMTProto(
+        (c) =>
+          c.invoke(
+            new Api.payments.GetResaleStarGifts({
+              giftId: bigInt(giftId),
+              sortByPrice: true,
+              offset: "",
+              limit: 1,
+            } as any)
+          ),
+        client
+      )
     );
 
     if (result.className !== "payments.ResaleStarGifts") return null;
@@ -219,17 +246,19 @@ export async function fetchResaleListings(
   fetchLimit = 100,
   client?: TelegramClient
 ): Promise<ListingInfo[]> {
-  const result = await invokeMTProto(
-    (c) =>
-      c.invoke(
-        new Api.payments.GetResaleStarGifts({
-          giftId: bigInt(giftId),
-          sortByPrice: true,
-          offset: "",
-          limit: fetchLimit,
-        } as any)
-      ),
-    client
+  const result = await throttleResaleCall(() =>
+    invokeMTProto(
+      (c) =>
+        c.invoke(
+          new Api.payments.GetResaleStarGifts({
+            giftId: bigInt(giftId),
+            sortByPrice: true,
+            offset: "",
+            limit: fetchLimit,
+          } as any)
+        ),
+      client
+    )
   );
 
   if (result.className !== "payments.ResaleStarGifts") return [];
@@ -317,21 +346,23 @@ const attrRefreshing = new Set<string>();
 async function fetchGiftAttributeOptions(giftId: string, client?: TelegramClient): Promise<AttrCacheEntry> {
   const cached = attrCache.get(giftId);
   try {
-    const result = await invokeMTProto(
-      (c) =>
-        c.invoke(
-          new Api.payments.GetResaleStarGifts({
-            giftId: bigInt(giftId),
-            sortByPrice: true,
-            offset: "",
-            limit: 1,
-            // Telegram bu maydon berilmasa (undefined) "attributes" ro'yxatini
-            // umuman qaytarmaydi (faqat "counters"ni beradi) - shu bilan birga
-            // aniq 0 (yoki har qanday eski hash) berilsa, to'liq ro'yxatni beradi.
-            attributesHash: bigInt(0),
-          } as any)
-        ),
-      client
+    const result = await throttleResaleCall(() =>
+      invokeMTProto(
+        (c) =>
+          c.invoke(
+            new Api.payments.GetResaleStarGifts({
+              giftId: bigInt(giftId),
+              sortByPrice: true,
+              offset: "",
+              limit: 1,
+              // Telegram bu maydon berilmasa (undefined) "attributes" ro'yxatini
+              // umuman qaytarmaydi (faqat "counters"ni beradi) - shu bilan birga
+              // aniq 0 (yoki har qanday eski hash) berilsa, to'liq ro'yxatni beradi.
+              attributesHash: bigInt(0),
+            } as any)
+          ),
+        client
+      )
     );
 
     if (result.className !== "payments.ResaleStarGifts") {
