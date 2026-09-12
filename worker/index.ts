@@ -3,7 +3,7 @@ import { getUserClient } from "./telegramClient";
 import { startPollLoop } from "./poll";
 import { startCommandLoop } from "./commands";
 import { getConfiguredBots } from "../lib/bots";
-import { setMyCommands } from "../lib/botApi";
+import { setMyCommands, setChatMenuButton } from "../lib/botApi";
 
 // Botning "Menu" tugmasidagi ro'yxat - ixcham tutish uchun eng ko'p ishlatiladigan
 // buyruqlar bilan cheklangan (/track, /untrack, /listgifts kabi kamroq ishlatiladiganlari
@@ -18,27 +18,43 @@ const MENU_COMMANDS = [
 ];
 
 /**
- * Menu tugmasini o'rnatadi - muvaffaqiyatsiz bo'lsa bir necha marta qayta
- * urinadi (o'sib boruvchi kutish bilan), chunki avvalgi "otib yuborib unutish"
- * (fire-and-forget) usuli xatoni faqat log qilardi va hech qachon qayta
- * urinmasdi - worker qayta ishga tushganda tarmoq vaqtincha beqaror bo'lsa,
- * Menu tugmasi butunlay o'rnatilmasdan qolib ketishi mumkin edi.
+ * Menu tugmasini to'liq o'rnatadi - ikkita ALOHIDA Bot API chaqiruvi kerak:
+ *  1. `setMyCommands` - ro'yxat MAZMUNI (qaysi buyruqlar, qanday tavsif bilan)
+ *  2. `setChatMenuButton` - tugmaning O'ZI (ikonkasi/turi "commands" qilib
+ *     ko'rsatiladi) - shu chaqirilmasa, tugma umuman chiqmasligi mumkin,
+ *     hatto buyruqlar ro'yxati BotFather'da to'g'ri ko'rinsa ham (aynan shu
+ *     holat sodir bo'lgani aniqlandi - avvalgi kodda faqat #1 chaqirilar,
+ *     #2 esa hech qachon chaqirilmagan edi).
+ * Ikkalasi ham muvaffaqiyatsiz bo'lsa alohida qayta uriniladi (o'sib
+ * boruvchi kutish bilan) - avvalgi "otib yuborib unutish" usuli xatoni
+ * faqat log qilardi va hech qachon qayta urinmasdi.
  */
-async function ensureMenuCommands(token: string, botId: string): Promise<void> {
+async function ensureMenuButton(token: string, botId: string): Promise<void> {
   const MAX_ATTEMPTS = 5;
+  let commandsOk = false;
+  let buttonOk = false;
+
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    const ok = await setMyCommands(token, MENU_COMMANDS);
-    if (ok) {
-      console.log(`[index] Bot "${botId}": Menu tugmasi o'rnatildi (${MENU_COMMANDS.length} buyruq).`);
+    if (!commandsOk) commandsOk = await setMyCommands(token, MENU_COMMANDS);
+    if (!buttonOk) buttonOk = await setChatMenuButton(token);
+
+    if (commandsOk && buttonOk) {
+      console.log(`[index] Bot "${botId}": Menu tugmasi va buyruqlar ro'yxati o'rnatildi (${MENU_COMMANDS.length} buyruq).`);
       return;
     }
     if (attempt < MAX_ATTEMPTS) {
       const waitMs = 2000 * attempt;
-      console.error(`[index] Bot "${botId}": setMyCommands urinish ${attempt}/${MAX_ATTEMPTS} muvaffaqiyatsiz, ${waitMs}ms dan keyin qayta urinamiz.`);
+      console.error(
+        `[index] Bot "${botId}": urinish ${attempt}/${MAX_ATTEMPTS} to'liq muvaffaqiyatli emas ` +
+          `(setMyCommands=${commandsOk}, setChatMenuButton=${buttonOk}), ${waitMs}ms dan keyin qayta urinamiz.`
+      );
       await new Promise((r) => setTimeout(r, waitMs));
     }
   }
-  console.error(`[index] Bot "${botId}": Menu tugmasini ${MAX_ATTEMPTS} urinishdan keyin ham o'rnatib bo'lmadi!`);
+  console.error(
+    `[index] Bot "${botId}": ${MAX_ATTEMPTS} urinishdan keyin ham to'liq o'rnatilmadi ` +
+      `(setMyCommands=${commandsOk}, setChatMenuButton=${buttonOk})!`
+  );
 }
 
 async function main() {
@@ -55,8 +71,8 @@ async function main() {
     // Fonda ishga tushiramiz (await qilmasdan) - ichkarida o'ziga xos qayta
     // urinish bor, shu sabab bot javob berishni kutib turishga hojat yo'q;
     // Menu tugmasi bir necha soniyada fonda o'rnatiladi.
-    ensureMenuCommands(bot.token, bot.id).catch((err) => {
-      console.error(`[index] Bot "${bot.id}" uchun ensureMenuCommands kutilmagan xatosi:`, err);
+    ensureMenuButton(bot.token, bot.id).catch((err) => {
+      console.error(`[index] Bot "${bot.id}" uchun ensureMenuButton kutilmagan xatosi:`, err);
     });
     startCommandLoop(bot, client).catch((err) => {
       console.error(`[index] Bot "${bot.id}" command loop butunlay to'xtadi:`, err);

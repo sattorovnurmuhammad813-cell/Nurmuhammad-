@@ -49,6 +49,37 @@ export async function setMyCommands(token: string, commands: BotCommand[]): Prom
   }
 }
 
+/**
+ * Chat oynasidagi xabar yozish maydoni yonidagi "Menu" tugmasining o'zini
+ * (ikonkasini/turi) sozlaydi - `setMyCommands` faqat ro'yxat MAZMUNINI
+ * belgilaydi, lekin tugmaning ko'rinishini EMAS. Ikkalasi alohida Bot API
+ * chaqiruvlari: `setMyCommands` chaqirilgan-u, `setChatMenuButton` hech
+ * qachon chaqirilmagan bo'lsa, tugma umuman chiqmasligi mumkin edi (aynan
+ * shu holat aniqlangan). `chatId` berilmasa - standart barcha shaxsiy
+ * chatlar uchun o'rnatiladi.
+ */
+export async function setChatMenuButton(token: string, chatId?: number | string): Promise<boolean> {
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/setChatMenuButton`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...(chatId != null ? { chat_id: chatId } : {}),
+        menu_button: { type: "commands" },
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`setChatMenuButton muvaffaqiyatsiz: ${res.status} ${body}`);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("setChatMenuButton tarmoq xatosi:", err);
+    return false;
+  }
+}
+
 export async function sendMessage(
   token: string,
   chatId: number | string,
