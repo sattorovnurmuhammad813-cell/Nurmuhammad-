@@ -392,26 +392,28 @@ async function handleCallbackQuery(
 
   try {
     if (data.startsWith("pg:")) {
+      // Tugmadagi "yuklanmoqda" holatini DARHOL to'xtatamiz - katalog keshi
+      // eskirgan bo'lsa ham getGiftCatalog endi hech qachon jonli MTProto
+      // javobini kutib turmaydi, lekin narx tekshiruv navbatida kutib turgan
+      // (masalan yangi/hali keshlanmagan gift uchun) so'rovlar bo'lsa, ular
+      // callback_query'ning ~30-60s muddatidan oshib ketishi mumkin edi.
+      await answerCallbackQuery(bot.token, cq.id);
       const page = Number(data.slice(3));
       const catalog = await getGiftCatalog(false, client);
       const limited = catalog.filter((g) => g.limited);
       const trackedMap = buildTrackedMap(await listTrackedForChat(bot.id, chatId));
       const { text, rows } = buildGiftListKeyboard(limited, page, trackedMap);
       await editMessage(bot.token, chatId, messageId, text, rows);
-      await answerCallbackQuery(bot.token, cq.id);
       return;
     }
 
     if (data.startsWith("gift:")) {
+      await answerCallbackQuery(bot.token, cq.id);
+
       const [, pageStr, giftId] = data.split(":");
       const state: GiftState = { giftId, modelIdx: null, backdropIdx: null, listPage: Number(pageStr) || 0 };
       const rendered = await renderGiftDetail(bot, chatId, client, state);
-      if (!rendered) {
-        await answerCallbackQuery(bot.token, cq.id, "Bu sovg'a topilmadi.");
-        return;
-      }
-
-      await answerCallbackQuery(bot.token, cq.id);
+      if (!rendered) return;
 
       // Gift rasmini (stikerini) MTProto orqali yuklab, Bot API'ga qayta yuklab
       // alohida xabar sifatida yuboramiz - eng yaxshi urinish, topilmasa/muvaffaqiyatsiz
@@ -436,19 +438,17 @@ async function handleCallbackQuery(
     }
 
     if (data.startsWith("d:")) {
+      await answerCallbackQuery(bot.token, cq.id);
       const parts = data.split(":");
       const state = parseGiftState(parts.slice(1, 5));
       const rendered = await renderGiftDetail(bot, chatId, client, state);
-      if (!rendered) {
-        await answerCallbackQuery(bot.token, cq.id, "Bu sovg'a topilmadi.");
-        return;
-      }
+      if (!rendered) return;
       await editMessage(bot.token, chatId, messageId, rendered.text, rendered.rows);
-      await answerCallbackQuery(bot.token, cq.id);
       return;
     }
 
     if (data.startsWith("dm:") || data.startsWith("db:")) {
+      await answerCallbackQuery(bot.token, cq.id);
       const kind: "model" | "backdrop" = data.startsWith("dm:") ? "model" : "backdrop";
       const parts = data.split(":");
       const state = parseGiftState(parts.slice(1, 5));
@@ -458,11 +458,11 @@ async function handleCallbackQuery(
       const options = kind === "model" ? models : backdrops;
       const { text, rows } = buildAttrListKeyboard(options, attrPage, kind, state);
       await editMessage(bot.token, chatId, messageId, text, rows);
-      await answerCallbackQuery(bot.token, cq.id);
       return;
     }
 
     if (data.startsWith("pm:") || data.startsWith("pb:")) {
+      await answerCallbackQuery(bot.token, cq.id);
       const isModel = data.startsWith("pm:");
       const parts = data.split(":");
       const giftId = parts[1];
@@ -474,12 +474,8 @@ async function handleCallbackQuery(
         : { giftId, modelIdx: decodeIdx(parts[2]), backdropIdx: newIdx, listPage };
 
       const rendered = await renderGiftDetail(bot, chatId, client, state);
-      if (!rendered) {
-        await answerCallbackQuery(bot.token, cq.id, "Bu sovg'a topilmadi.");
-        return;
-      }
+      if (!rendered) return;
       await editMessage(bot.token, chatId, messageId, rendered.text, rendered.rows);
-      await answerCallbackQuery(bot.token, cq.id);
       return;
     }
 
