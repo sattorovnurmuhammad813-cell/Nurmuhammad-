@@ -72,11 +72,29 @@ function buildResaleInvoice(slug: string) {
   });
 }
 
+// Bu xato kodlar - e'lon biz uni ko'rgandan keyin, forma so'ralguncha bo'lgan
+// oraliqda allaqachon YOPILGANINI bildiradi (odatda boshqa xaridor - masalan
+// yana bir sniper bot - ulgurib sotib olgan, yoki egasi sotuvdan olib qo'ygan).
+// Bu HAQIQIY xato emas - narx juda arzon bo'lgani uchun kutilgan raqobat holati.
+const LISTING_GONE_PATTERN =
+  /STARGIFT_NOT_FOUND|STARGIFT_INVALID|STARGIFT_SLUG_INVALID|STARGIFT_ALREADY_CONVERTED|STARGIFT_ALREADY_UPGRADED|STARGIFT_ALREADY_REFUNDED|COLLECTIBLE_NOT_FOUND|INVOICE_INVALID|STARS_INVOICE_INVALID/;
+
+function isListingGoneError(msg: string): boolean {
+  return LISTING_GONE_PATTERN.test(msg);
+}
+
+export type ResaleFormResult = { ok: true; form: ResaleForm } | { ok: false; error: string };
+
 /**
  * Bozordagi bitta nusxani (slug) sotib olish uchun to'lov formasini oladi (hali
  * pul yechilmaydi - faqat narx va formId'ni tasdiqlaydi).
+ *
+ * Muvaffaqiyatsiz bo'lsa (masalan boshqa xaridor ulgurib olgan bo'lsa -
+ * STARGIFT_NOT_FOUND/STARGIFT_INVALID, yoki boshqa RPC xatosi) - HAQIQIY
+ * Telegram xato matnini qaytaradi, shunda foydalanuvchiga ko'rsatiladigan
+ * xabar aniq sababni ko'rsata oladi ("noma'lum muammo" emas).
  */
-export async function getResaleForm(slug: string, client?: TelegramClient): Promise<ResaleForm | null> {
+export async function getResaleForm(slug: string, client?: TelegramClient): Promise<ResaleFormResult> {
   try {
     const invoice = buildResaleInvoice(slug);
     const result: any = await invokeMTProto(
@@ -84,15 +102,18 @@ export async function getResaleForm(slug: string, client?: TelegramClient): Prom
       client
     );
 
-    if (result.className !== "payments.PaymentFormStarGift") return null;
+    if (result.className !== "payments.PaymentFormStarGift") {
+      return { ok: false, error: `Kutilmagan forma turi: ${result.className}` };
+    }
 
     const inv = result.invoice;
     const priceStars = ((inv?.prices ?? []) as any[]).reduce((sum, p) => sum + Number(p.amount), 0);
-    return { formId: result.formId, priceStars, currency: inv?.currency ?? "XTR" };
-  } catch (err) {
+    return { ok: true, form: { formId: result.formId, priceStars, currency: inv?.currency ?? "XTR" } };
+  } catch (err: any) {
+    const msg = String(err?.errorMessage ?? err?.message ?? err);
     console.error(`getResaleForm(${slug}) xatosi:`, err);
     alertRiskSignal(err, `getResaleForm(${slug})`).catch(() => {});
-    return null;
+    return { ok: false, error: msg };
   }
 }
 
@@ -130,7 +151,8 @@ export type AutoBuySkipReason =
   | "daily_limit"
   | "insufficient_balance"
   | "form_error"
-  | "form_price_exceeds_cap";
+  | "form_price_exceeds_cap"
+  | "listing_taken";
 
 export interface AutoBuyResult {
   attempted: boolean;
@@ -175,19 +197,21 @@ export async function tryAutoBuy(
   let balance: number;
   try {
     balance = await getStarsBalance(client);
-  } catch {
+  } catch (err: any) {
     // getStarsBalance allaqachon xavf signalini yubordi - shu xaridni tashlab,
     // butun tekshiruv siklini to'xtatmaymiz.
-    return { attempted: false, reason: "form_error" };
+    return { attempted: false, reason: "form_error", error: String(err?.errorMessage ?? err?.message ?? err) };
   }
   if (balance < listedPriceStars) {
     return { attempted: false, reason: "insufficient_balance", balance, priceStars: listedPriceStars };
   }
 
-  const form = await getResaleForm(slug, client);
-  if (!form) {
-    return { attempted: false, reason: "form_error" };
+  const formResult = await getResaleForm(slug, client);
+  if (!formResult.ok) {
+    const reason: AutoBuySkipReason = isListingGoneError(formResult.error) ? "listing_taken" : "form_error";
+    return { attempted: false, reason, error: formResult.error };
   }
+  const form = formResult.form;
 
   if (form.priceStars > capStars) {
     return { attempted: false, reason: "form_price_exceeds_cap", priceStars: form.priceStars };

@@ -37,8 +37,12 @@ function formatAutoBuyLine(r: AutoBuyResult): string | null {
   if (r.reason === "daily_limit") return `⚠️ Avtomatik xarid o'tkazib yuborildi: kunlik limit allaqachon ishlatilgan.`;
   if (r.reason === "insufficient_balance")
     return `⚠️ Avtomatik xarid o'tkazib yuborildi: balans yetarli emas (${r.balance} ⭐ bor, ${r.priceStars} ⭐ kerak).`;
-  if (r.reason === "form_error" || r.reason === "form_price_exceeds_cap")
-    return `⚠️ Avtomatik xarid o'tkazib yuborildi: xarid formasida muammo.`;
+  if (r.reason === "form_price_exceeds_cap")
+    return `⚠️ Avtomatik xarid o'tkazib yuborildi: forma qaytargan narx chegaradan oshib ketdi (${r.priceStars} ⭐).`;
+  if (r.reason === "listing_taken")
+    return `⏱️ Kechikdik — bu e'lon band bo'lib qoldi (boshqa xaridor ulgurib sotib olgan bo'lishi mumkin).`;
+  if (r.reason === "form_error")
+    return `⚠️ Avtomatik xarid o'tkazib yuborildi: xarid formasida muammo${r.error ? ` — ${escapeHtml(r.error)}` : ""}.`;
   if (r.success === false) return `❌ Avtomatik xarid muvaffaqiyatsiz: ${escapeHtml(r.error ?? "noma'lum xato")}`;
   return null;
 }
