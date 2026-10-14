@@ -71,11 +71,17 @@ export function classify(tags) {
     new RegExp(MATERNITY_RE, "i").test(name) ||
     tags.healthcare === "birthing_centre" ||
     tags.healthcare === "midwife" ||
-    /obstetric|gynaecolog/.test(tags["healthcare:speciality"] || "")
+    /obstetric/.test(tags["healthcare:speciality"] || "")
   ) {
     return "Tug'ruqxona / perinatal markaz";
   }
-  if (tags.amenity === "hospital" || tags.healthcare === "hospital") return "Shifoxona (kasalxona)";
+  if (
+    tags.amenity === "hospital" ||
+    tags.healthcare === "hospital" ||
+    /shifoxona|kasalxona|больниц|госпитал/i.test(name)
+  ) {
+    return "Shifoxona (kasalxona)";
+  }
   if (/poliklinika|поликлиник|oilaviy|семейн/i.test(name)) return "Poliklinika / oilaviy poliklinika";
   if (tags.amenity === "clinic" || tags.healthcare === "clinic" || tags.healthcare === "centre") {
     return "Klinika / tibbiyot markazi";
@@ -84,19 +90,50 @@ export function classify(tags) {
   return "Boshqa tibbiyot muassasasi";
 }
 
+// Nom bo'yicha topilgan, lekin tibbiyot muassasasi bo'lmagan obyektlar
+// (avtobus marshruti, bekat, ma'lumot taxtasi va h.k.).
+function isNoise(tags) {
+  return Boolean(
+    tags.route || tags.type === "route" || tags.public_transport || tags.highway ||
+    tags.railway || tags.tourism || tags.shop || tags.office ||
+    (["pharmacy", "veterinary"].includes(tags.amenity) && !tags.healthcare),
+  );
+}
+
+const isMedical = (tags) => Boolean(tags.amenity || tags.healthcare);
+
+function distanceM(a, b) {
+  const dLat = (a.lat - b.lat) * 111320;
+  const dLon = (a.lon - b.lon) * 111320 * Math.cos((a.lat * Math.PI) / 180);
+  return Math.hypot(dLat, dLon);
+}
+
+const normName = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+
 export function toRows(elements) {
   const seen = new Set();
-  const rows = [];
+  const candidates = [];
   for (const el of elements) {
     const lat = el.lat ?? el.center?.lat;
     const lon = el.lon ?? el.center?.lon;
     const tags = el.tags || {};
-    if (lat == null || lon == null) continue;
-    // Dorixona, veterinariya va h.k. ism bo'yicha tushib qolsa - chiqarib tashlaymiz.
-    if (["pharmacy", "veterinary", "dentist"].includes(tags.amenity) && !tags.healthcare) continue;
+    if (lat == null || lon == null || isNoise(tags)) continue;
     const key = `${el.type}/${el.id}`;
     if (seen.has(key)) continue;
     seen.add(key);
+    candidates.push({ key, lat, lon, tags });
+  }
+  // Bitta muassasaning bir nechta binosi alohida chiqmasligi uchun: bir xil nomli
+  // va 400 m ichidagi obyektlar bitta deb olinadi (amenity/healthcare teglisi afzal).
+  candidates.sort((a, b) => Number(isMedical(b.tags)) - Number(isMedical(a.tags)));
+  const kept = [];
+  for (const c of candidates) {
+    const n = c.tags.name ? normName(c.tags.name) : "";
+    const dup = n && kept.some((k) => k.tags.name && normName(k.tags.name) === n && distanceM(k, c) < 400);
+    if (!dup) kept.push(c);
+  }
+  const rows = [];
+  for (const { key, lat, lon, tags } of kept) {
     const name = tags["name:uz"] || tags.name || tags["name:ru"] || tags["name:en"] || "(nomsiz)";
     const address = [tags["addr:street"], tags["addr:housenumber"]].filter(Boolean).join(", ");
     rows.push({
