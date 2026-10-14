@@ -1,0 +1,2305 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.307935,
+          41.368469
+        ]
+      },
+      "properties": {
+        "turi": "Tug'ruqxona / perinatal markaz",
+        "nomi": "Biogen Med",
+        "nomi_ru": "",
+        "manzil": "Yangi Yunusobod ko'chasi",
+        "telefon": "+998 71 230 74 72",
+        "ish_vaqti": "24/7",
+        "lat": 41.368469,
+        "lon": 69.307935,
+        "google": "https://www.google.com/maps?q=41.368469,69.3079346",
+        "yandex": "https://yandex.uz/maps/?pt=69.3079346,41.368469&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5356933321"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.285997,
+          41.353314
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "(nomsiz)",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.353314,
+        "lon": 69.285997,
+        "google": "https://www.google.com/maps?q=41.3533144,69.2859973",
+        "yandex": "https://yandex.uz/maps/?pt=69.2859973,41.3533144&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/744561313"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.318483,
+          41.380322
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "NMS",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998951962003",
+        "ish_vaqti": "24/7",
+        "lat": 41.380322,
+        "lon": 69.318483,
+        "google": "https://www.google.com/maps?q=41.3803222,69.3184832",
+        "yandex": "https://yandex.uz/maps/?pt=69.3184832,41.3803222&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6398247785"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.298169,
+          41.361084
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Respublika Ixtisoslashtirilgan Nefrologiya va Transplantatsiya Ilmiy Amaliy Markazi",
+        "nomi_ru": "Республиканский Нефрологический Центр",
+        "manzil": "Янгишахар улица, 9",
+        "telefon": "+998712249659",
+        "ish_vaqti": "24/7",
+        "lat": 41.361084,
+        "lon": 69.298169,
+        "google": "https://www.google.com/maps?q=41.3610841,69.2981685",
+        "yandex": "https://yandex.uz/maps/?pt=69.2981685,41.3610841&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6369863385"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.28361,
+          41.36304
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Shifo-Dono",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "2240313",
+        "ish_vaqti": "",
+        "lat": 41.36304,
+        "lon": 69.28361,
+        "google": "https://www.google.com/maps?q=41.36304,69.2836098",
+        "yandex": "https://yandex.uz/maps/?pt=69.2836098,41.36304&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4317471432"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.289677,
+          41.358694
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "SHOX MED Педиатрия",
+        "nomi_ru": "",
+        "manzil": "4-й пр-д Хушнаво, д. 26/2",
+        "telefon": "",
+        "ish_vaqti": "Mo-Su 08:00-20:00",
+        "lat": 41.358694,
+        "lon": 69.289677,
+        "google": "https://www.google.com/maps?q=41.3586944,69.2896766",
+        "yandex": "https://yandex.uz/maps/?pt=69.2896766,41.3586944&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/11672285975"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.3376,
+          41.355207
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Toshkent Davlat Pedyatriya Instituti",
+        "nomi_ru": "САМПИ",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.355207,
+        "lon": 69.3376,
+        "google": "https://www.google.com/maps?q=41.3552073,69.3376002",
+        "yandex": "https://yandex.uz/maps/?pt=69.3376002,41.3552073&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/143350648"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.281589,
+          41.331762
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Toshkent shahar o'smirlar dispanseri qoshidagi maslahat - tashxis",
+        "nomi_ru": "Ташкентский Городской Подростковый Диспансер",
+        "manzil": "",
+        "telefon": "235-11-60, 235-67-95",
+        "ish_vaqti": "",
+        "lat": 41.331762,
+        "lon": 69.281589,
+        "google": "https://www.google.com/maps?q=41.3317624,69.2815891",
+        "yandex": "https://yandex.uz/maps/?pt=69.2815891,41.3317624&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/469499483"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.300286,
+          41.36039
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Virusologiya ilmiy-tekshirish instituti",
+        "nomi_ru": "НИИ вирусологии",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.36039,
+        "lon": 69.300286,
+        "google": "https://www.google.com/maps?q=41.3603898,69.3002864",
+        "yandex": "https://yandex.uz/maps/?pt=69.3002864,41.3603898&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/relation/9576370"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.299817,
+          41.361441
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Военный госпиталь",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.361441,
+        "lon": 69.299817,
+        "google": "https://www.google.com/maps?q=41.3614415,69.2998166",
+        "yandex": "https://yandex.uz/maps/?pt=69.2998166,41.3614415&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4578830895"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.297681,
+          41.361655
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Госпиталь пограничных войск",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.361655,
+        "lon": 69.297681,
+        "google": "https://www.google.com/maps?q=41.3616549,69.2976811",
+        "yandex": "https://yandex.uz/maps/?pt=69.2976811,41.3616549&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4720158190"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.297929,
+          41.360578
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Детская больница №1",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.360578,
+        "lon": 69.297929,
+        "google": "https://www.google.com/maps?q=41.3605783,69.2979294",
+        "yandex": "https://yandex.uz/maps/?pt=69.2979294,41.3605783&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/relation/9576371"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.279223,
+          41.32846
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Клиника Lor Medical Service",
+        "nomi_ru": "",
+        "manzil": "6",
+        "telefon": "+998712359377;+998712359428",
+        "ish_vaqti": "",
+        "lat": 41.32846,
+        "lon": 69.279223,
+        "google": "https://www.google.com/maps?q=41.3284603,69.2792228",
+        "yandex": "https://yandex.uz/maps/?pt=69.2792228,41.3284603&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/165720274"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.274671,
+          41.357384
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Клиническая Больница №7 (бывшая №17)",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.357384,
+        "lon": 69.274671,
+        "google": "https://www.google.com/maps?q=41.3573842,69.2746711",
+        "yandex": "https://yandex.uz/maps/?pt=69.2746711,41.3573842&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/32720921"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311305,
+          41.367522
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Кожно-венерологический диспансер",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "Mo-Sa 09:00-18:00",
+        "lat": 41.367522,
+        "lon": 69.311305,
+        "google": "https://www.google.com/maps?q=41.3675218,69.3113053",
+        "yandex": "https://yandex.uz/maps/?pt=69.3113053,41.3675218&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4985152127"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.276773,
+          41.330483
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Медикосоциальный центр Фонда \"Соглом авлод учун\"",
+        "nomi_ru": "",
+        "manzil": "Sharof Rashidov ko'chasi, 94A",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.330483,
+        "lon": 69.276773,
+        "google": "https://www.google.com/maps?q=41.3304828,69.276773",
+        "yandex": "https://yandex.uz/maps/?pt=69.276773,41.3304828&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/32808146"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.297904,
+          41.360639
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Отделение недоношенных детей",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.360639,
+        "lon": 69.297904,
+        "google": "https://www.google.com/maps?q=41.3606389,69.2979044",
+        "yandex": "https://yandex.uz/maps/?pt=69.2979044,41.3606389&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/8973125217"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.279077,
+          41.337235
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Семашко",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.337235,
+        "lon": 69.279077,
+        "google": "https://www.google.com/maps?q=41.337235,69.279077",
+        "yandex": "https://yandex.uz/maps/?pt=69.279077,41.337235&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/143446112"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.291532,
+          41.322432
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Центр медицинской реабилитации \"Прогноз\"",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998909855568",
+        "ish_vaqti": "Mo-Sa 10:00-17:00",
+        "lat": 41.322432,
+        "lon": 69.291532,
+        "google": "https://www.google.com/maps?q=41.3224317,69.291532",
+        "yandex": "https://yandex.uz/maps/?pt=69.291532,41.3224317&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/8185909917"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.269552,
+          41.367153
+        ]
+      },
+      "properties": {
+        "turi": "Shifoxona (kasalxona)",
+        "nomi": "Центр Понсети",
+        "nomi_ru": "",
+        "manzil": "Yunusobod 6 mavzesi, 1",
+        "telefon": "+998977525782",
+        "ish_vaqti": "Mo-Sa 09:00-18:00",
+        "lat": 41.367153,
+        "lon": 69.269552,
+        "google": "https://www.google.com/maps?q=41.367153,69.2695515",
+        "yandex": "https://yandex.uz/maps/?pt=69.2695515,41.367153&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/9105353221"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311091,
+          41.37064
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.37064,
+        "lon": 69.311091,
+        "google": "https://www.google.com/maps?q=41.3706397,69.3110914",
+        "yandex": "https://yandex.uz/maps/?pt=69.3110914,41.3706397&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4659411634"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.312431,
+          41.370112
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.370112,
+        "lon": 69.312431,
+        "google": "https://www.google.com/maps?q=41.3701121,69.3124308",
+        "yandex": "https://yandex.uz/maps/?pt=69.3124308,41.3701121&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4659411635"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.310251,
+          41.369569
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.369569,
+        "lon": 69.310251,
+        "google": "https://www.google.com/maps?q=41.3695692,69.3102508",
+        "yandex": "https://yandex.uz/maps/?pt=69.3102508,41.3695692&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/10803349295"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311853,
+          41.369186
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.369186,
+        "lon": 69.311853,
+        "google": "https://www.google.com/maps?q=41.369186,69.3118532",
+        "yandex": "https://yandex.uz/maps/?pt=69.3118532,41.369186&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13339363592"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311227,
+          41.370693
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.370693,
+        "lon": 69.311227,
+        "google": "https://www.google.com/maps?q=41.3706928,69.3112274",
+        "yandex": "https://yandex.uz/maps/?pt=69.3112274,41.3706928&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13339363593"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.312498,
+          41.370002
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.370002,
+        "lon": 69.312498,
+        "google": "https://www.google.com/maps?q=41.3700023,69.3124982",
+        "yandex": "https://yandex.uz/maps/?pt=69.3124982,41.3700023&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13339363594"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311727,
+          41.369152
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.369152,
+        "lon": 69.311727,
+        "google": "https://www.google.com/maps?q=41.3691518,69.311727",
+        "yandex": "https://yandex.uz/maps/?pt=69.311727,41.3691518&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/706221697"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.3102,
+          41.369713
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.369713,
+        "lon": 69.3102,
+        "google": "https://www.google.com/maps?q=41.3697126,69.3101999",
+        "yandex": "https://yandex.uz/maps/?pt=69.3101999,41.3697126&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/1254344624"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311284,
+          41.369892
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "12-sonli poliklinika",
+        "nomi_ru": "Поликлиника № 12",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.369892,
+        "lon": 69.311284,
+        "google": "https://www.google.com/maps?q=41.3698924,69.3112837",
+        "yandex": "https://yandex.uz/maps/?pt=69.3112837,41.3698924&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/relation/19896208"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.292853,
+          41.332464
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "5-sonli stomatologiya poliklinikasi",
+        "nomi_ru": "Стоматологическая поликлиника №5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.332464,
+        "lon": 69.292853,
+        "google": "https://www.google.com/maps?q=41.3324638,69.292853",
+        "yandex": "https://yandex.uz/maps/?pt=69.292853,41.3324638&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5995451139"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.291829,
+          41.332012
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "5-sonli stomatologiya poliklinikasi",
+        "nomi_ru": "Стоматологическая поликлиника №5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.332012,
+        "lon": 69.291829,
+        "google": "https://www.google.com/maps?q=41.3320125,69.2918293",
+        "yandex": "https://yandex.uz/maps/?pt=69.2918293,41.3320125&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5995451145"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.291017,
+          41.332765
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "5-sonli stomatologiya poliklinikasi",
+        "nomi_ru": "Стоматологическая поликлиника №5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.332765,
+        "lon": 69.291017,
+        "google": "https://www.google.com/maps?q=41.3327649,69.2910167",
+        "yandex": "https://yandex.uz/maps/?pt=69.2910167,41.3327649&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6796401488"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.292252,
+          41.33315
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "5-sonli stomatologiya poliklinikasi",
+        "nomi_ru": "Стоматологическая поликлиника №5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.33315,
+        "lon": 69.292252,
+        "google": "https://www.google.com/maps?q=41.3331504,69.2922521",
+        "yandex": "https://yandex.uz/maps/?pt=69.2922521,41.3331504&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6796401489"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.292312,
+          41.333104
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "5-sonli stomatologiya poliklinikasi",
+        "nomi_ru": "Стоматологическая поликлиника №5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.333104,
+        "lon": 69.292312,
+        "google": "https://www.google.com/maps?q=41.3331043,69.2923124",
+        "yandex": "https://yandex.uz/maps/?pt=69.2923124,41.3331043&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13738367999"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.291092,
+          41.332863
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "5-sonli stomatologiya poliklinikasi",
+        "nomi_ru": "Стоматологическая поликлиника №5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.332863,
+        "lon": 69.291092,
+        "google": "https://www.google.com/maps?q=41.3328631,69.291092",
+        "yandex": "https://yandex.uz/maps/?pt=69.291092,41.3328631&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13787603473"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.272122,
+          41.370713
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "52-oilaviy poliklinika",
+        "nomi_ru": "Семейная поликлиника №52",
+        "manzil": "",
+        "telefon": "+998 71 2245387, +998 71 2245397, +998 71 2245398, +998 71 2245458",
+        "ish_vaqti": "8:00-18:00",
+        "lat": 41.370713,
+        "lon": 69.272122,
+        "google": "https://www.google.com/maps?q=41.3707126,69.272122",
+        "yandex": "https://yandex.uz/maps/?pt=69.272122,41.3707126&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/relation/1933817"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.282733,
+          41.331948
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "O'smir dispanseri Poliklinika bo'limi",
+        "nomi_ru": "Поликлиника Ташкентского Подросткового диспансера",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.331948,
+        "lon": 69.282733,
+        "google": "https://www.google.com/maps?q=41.3319476,69.2827327",
+        "yandex": "https://yandex.uz/maps/?pt=69.2827327,41.3319476&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5124432348"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.334215,
+          41.354344
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Поликлиника",
+        "nomi_ru": "",
+        "manzil": "Bogishamol ko'chasi",
+        "telefon": "",
+        "ish_vaqti": "Mo-Sa 08:30-14:00",
+        "lat": 41.354344,
+        "lon": 69.334215,
+        "google": "https://www.google.com/maps?q=41.3543439,69.3342145",
+        "yandex": "https://yandex.uz/maps/?pt=69.3342145,41.3543439&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4456590192"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.300839,
+          41.35183
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "поликлиника 49",
+        "nomi_ru": "",
+        "manzil": "Зарипова улица, 12",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.35183,
+        "lon": 69.300839,
+        "google": "https://www.google.com/maps?q=41.3518303,69.3008392",
+        "yandex": "https://yandex.uz/maps/?pt=69.3008392,41.3518303&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/143187865"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.286017,
+          41.353213
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Поликлиника 51",
+        "nomi_ru": "Семейная Поликлиника №51",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.353213,
+        "lon": 69.286017,
+        "google": "https://www.google.com/maps?q=41.3532127,69.2860169",
+        "yandex": "https://yandex.uz/maps/?pt=69.2860169,41.3532127&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/408159158"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.296209,
+          41.360211
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Поликлиника №54",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.360211,
+        "lon": 69.296209,
+        "google": "https://www.google.com/maps?q=41.3602106,69.2962093",
+        "yandex": "https://yandex.uz/maps/?pt=69.2962093,41.3602106&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/100976246"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.323581,
+          41.367336
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Семейная поликлиника",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.367336,
+        "lon": 69.323581,
+        "google": "https://www.google.com/maps?q=41.3673362,69.323581",
+        "yandex": "https://yandex.uz/maps/?pt=69.323581,41.3673362&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4795550021"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311642,
+          41.370852
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Семейная поликлиника №12",
+        "nomi_ru": "",
+        "manzil": "Yunus Ota ko'chasi",
+        "telefon": "",
+        "ish_vaqti": "Mo-Su 07:00-18:00",
+        "lat": 41.370852,
+        "lon": 69.311642,
+        "google": "https://www.google.com/maps?q=41.370852,69.3116421",
+        "yandex": "https://yandex.uz/maps/?pt=69.3116421,41.370852&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/101302639"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.276091,
+          41.320962
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Семейная поликлиника №53",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.320962,
+        "lon": 69.276091,
+        "google": "https://www.google.com/maps?q=41.320962,69.2760906",
+        "yandex": "https://yandex.uz/maps/?pt=69.2760906,41.320962&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/12736958409"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.31127,
+          41.367436
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Семейная Поликлиника №55",
+        "nomi_ru": "",
+        "manzil": "Yunus Ota ko'chasi",
+        "telefon": "2234909, 2223320, 2221992",
+        "ish_vaqti": "",
+        "lat": 41.367436,
+        "lon": 69.31127,
+        "google": "https://www.google.com/maps?q=41.3674364,69.3112704",
+        "yandex": "https://yandex.uz/maps/?pt=69.3112704,41.3674364&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/406588084"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.313616,
+          41.377266
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "\"Baxtli hayot\" tibbiyot markazi",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.377266,
+        "lon": 69.313616,
+        "google": "https://www.google.com/maps?q=41.3772663,69.3136164",
+        "yandex": "https://yandex.uz/maps/?pt=69.3136164,41.3772663&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6782024585"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.284198,
+          41.363186
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "\"Layon\" Центр Здоровья Женщин",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "2216848, 2240411",
+        "ish_vaqti": "Mo-Fr 09:00-17:00; Sa 09:00-14:00",
+        "lat": 41.363186,
+        "lon": 69.284198,
+        "google": "https://www.google.com/maps?q=41.3631861,69.2841983",
+        "yandex": "https://yandex.uz/maps/?pt=69.2841983,41.3631861&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4317471445"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.296085,
+          41.36473
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "\"Stomaworld\" stomatologiya klinikasi",
+        "nomi_ru": "",
+        "manzil": "Янгишахар улица, 64Б",
+        "telefon": "+998712310806",
+        "ish_vaqti": "Mo-Sa 08:30-18:00",
+        "lat": 41.36473,
+        "lon": 69.296085,
+        "google": "https://www.google.com/maps?q=41.3647301,69.2960853",
+        "yandex": "https://yandex.uz/maps/?pt=69.2960853,41.3647301&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5300397527"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.290865,
+          41.328855
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "(nomsiz)",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.328855,
+        "lon": 69.290865,
+        "google": "https://www.google.com/maps?q=41.3288548,69.2908652",
+        "yandex": "https://yandex.uz/maps/?pt=69.2908652,41.3288548&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/507254910"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.259267,
+          41.384984
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "(nomsiz)",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.384984,
+        "lon": 69.259267,
+        "google": "https://www.google.com/maps?q=41.3849843,69.2592666",
+        "yandex": "https://yandex.uz/maps/?pt=69.2592666,41.3849843&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/663781191"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.261133,
+          41.373955
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "ASAD KNR",
+        "nomi_ru": "",
+        "manzil": "Tiklanish ko'chasi, 1 A",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.373955,
+        "lon": 69.261133,
+        "google": "https://www.google.com/maps?q=41.3739545,69.2611325",
+        "yandex": "https://yandex.uz/maps/?pt=69.2611325,41.3739545&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/479720489"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.295392,
+          41.377982
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "ATLANT",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.377982,
+        "lon": 69.295392,
+        "google": "https://www.google.com/maps?q=41.3779816,69.2953924",
+        "yandex": "https://yandex.uz/maps/?pt=69.2953924,41.3779816&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4423874789"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.28713,
+          41.336315
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Brain Servis неврологическая клиника",
+        "nomi_ru": "",
+        "manzil": "Shivli ko'chasi, 9",
+        "telefon": "+998 71 2355354",
+        "ish_vaqti": "",
+        "lat": 41.336315,
+        "lon": 69.28713,
+        "google": "https://www.google.com/maps?q=41.3363149,69.2871297",
+        "yandex": "https://yandex.uz/maps/?pt=69.2871297,41.3363149&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/593974999"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.285286,
+          41.317791
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "COVID Test Centre",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.317791,
+        "lon": 69.285286,
+        "google": "https://www.google.com/maps?q=41.3177906,69.285286",
+        "yandex": "https://yandex.uz/maps/?pt=69.285286,41.3177906&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/8253909122"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.279989,
+          41.328337
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "de factum",
+        "nomi_ru": "",
+        "manzil": "Osiyo ko'chasi, 86a",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.328337,
+        "lon": 69.279989,
+        "google": "https://www.google.com/maps?q=41.3283369,69.2799885",
+        "yandex": "https://yandex.uz/maps/?pt=69.2799885,41.3283369&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13695369412"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.318275,
+          41.37184
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Ihlos-doctor",
+        "nomi_ru": "",
+        "manzil": "53А",
+        "telefon": "2231199",
+        "ish_vaqti": "",
+        "lat": 41.37184,
+        "lon": 69.318275,
+        "google": "https://www.google.com/maps?q=41.3718404,69.3182749",
+        "yandex": "https://yandex.uz/maps/?pt=69.3182749,41.3718404&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4325766391"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.28229,
+          41.360915
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Med Fay Tem",
+        "nomi_ru": "",
+        "manzil": "Ahmad Donish ko'chasi",
+        "telefon": "712217464",
+        "ish_vaqti": "",
+        "lat": 41.360915,
+        "lon": 69.28229,
+        "google": "https://www.google.com/maps?q=41.3609153,69.2822901",
+        "yandex": "https://yandex.uz/maps/?pt=69.2822901,41.3609153&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5974125786"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.287174,
+          41.353957
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Medas medical center",
+        "nomi_ru": "",
+        "manzil": "Amir Temur shoh ko'chasi, 119 Б",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.353957,
+        "lon": 69.287174,
+        "google": "https://www.google.com/maps?q=41.3539572,69.287174",
+        "yandex": "https://yandex.uz/maps/?pt=69.287174,41.3539572&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13000125327"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.297521,
+          41.336552
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "MedInfo",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.336552,
+        "lon": 69.297521,
+        "google": "https://www.google.com/maps?q=41.3365518,69.2975208",
+        "yandex": "https://yandex.uz/maps/?pt=69.2975208,41.3365518&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13152536701"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.286781,
+          41.362917
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Medlook",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "2217177, 2216917",
+        "ish_vaqti": "",
+        "lat": 41.362917,
+        "lon": 69.286781,
+        "google": "https://www.google.com/maps?q=41.362917,69.2867811",
+        "yandex": "https://yandex.uz/maps/?pt=69.2867811,41.362917&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4522869248"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.30925,
+          41.369503
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Nazar \"Глазная Клиника\"",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.369503,
+        "lon": 69.30925,
+        "google": "https://www.google.com/maps?q=41.3695032,69.3092496",
+        "yandex": "https://yandex.uz/maps/?pt=69.3092496,41.3695032&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5199353021"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.311004,
+          41.354935
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Neurolife",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998 88 3434242",
+        "ish_vaqti": "Mo-Th 09:00-18:00; Fr 09:00-17:00; Sa 09:00-15:00",
+        "lat": 41.354935,
+        "lon": 69.311004,
+        "google": "https://www.google.com/maps?q=41.3549352,69.3110041",
+        "yandex": "https://yandex.uz/maps/?pt=69.3110041,41.3549352&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13204468458"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.287655,
+          41.353922
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "ProfMedService",
+        "nomi_ru": "",
+        "manzil": "Amir Temur shoh ko'chasi, 119",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.353922,
+        "lon": 69.287655,
+        "google": "https://www.google.com/maps?q=41.3539216,69.2876548",
+        "yandex": "https://yandex.uz/maps/?pt=69.2876548,41.3539216&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/183313202"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.284842,
+          41.363505
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Sihat Koz",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998 71 224 13 13;+998 71 224 85 00;+998 97 909 13 13",
+        "ish_vaqti": "Mo-Fr 08:30-17:00; Sa 08:30-14:30",
+        "lat": 41.363505,
+        "lon": 69.284842,
+        "google": "https://www.google.com/maps?q=41.3635054,69.2848424",
+        "yandex": "https://yandex.uz/maps/?pt=69.2848424,41.3635054&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4317471449"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.272244,
+          41.357994
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Sihat Oila Medical clinic",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.357994,
+        "lon": 69.272244,
+        "google": "https://www.google.com/maps?q=41.3579944,69.2722439",
+        "yandex": "https://yandex.uz/maps/?pt=69.2722439,41.3579944&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6065399323"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.291639,
+          41.333
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Vitros Diagnostics",
+        "nomi_ru": "Vitros Diagnostics Гематологические, Биохимические, Иммунохимические анализы",
+        "manzil": "",
+        "telefon": "2003002",
+        "ish_vaqti": "Mo-Sa 07:30-06:00",
+        "lat": 41.333,
+        "lon": 69.291639,
+        "google": "https://www.google.com/maps?q=41.3330001,69.2916391",
+        "yandex": "https://yandex.uz/maps/?pt=69.2916391,41.3330001&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4479094594"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.298473,
+          41.383033
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Yunusobod Medical Center",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.383033,
+        "lon": 69.298473,
+        "google": "https://www.google.com/maps?q=41.3830328,69.2984725",
+        "yandex": "https://yandex.uz/maps/?pt=69.2984725,41.3830328&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/10761374605"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.261257,
+          41.374004
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "АСАД КНР",
+        "nomi_ru": "",
+        "manzil": "Tiklanish ko'chasi",
+        "telefon": "",
+        "ish_vaqti": "24/7",
+        "lat": 41.374004,
+        "lon": 69.261257,
+        "google": "https://www.google.com/maps?q=41.3740038,69.261257",
+        "yandex": "https://yandex.uz/maps/?pt=69.261257,41.3740038&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6216741291"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.292062,
+          41.33084
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Варикоз даволаш шифоханаси “Phlenolife”",
+        "nomi_ru": "Клиника современной флебологии “Phlebolife”",
+        "manzil": "Chingiz Aytmatov ko'chasi, 38",
+        "telefon": "+998712356100",
+        "ish_vaqti": "Mo-Sa 09:00-18:00",
+        "lat": 41.33084,
+        "lon": 69.292062,
+        "google": "https://www.google.com/maps?q=41.3308397,69.2920619",
+        "yandex": "https://yandex.uz/maps/?pt=69.2920619,41.3308397&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5683235226"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.279067,
+          41.321202
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Клиника Доктора Овчарова",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.321202,
+        "lon": 69.279067,
+        "google": "https://www.google.com/maps?q=41.3212017,69.2790668",
+        "yandex": "https://yandex.uz/maps/?pt=69.2790668,41.3212017&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5253453637"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.307896,
+          41.368393
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Круглосуточный ЛОР 24/7 - Biogen Med",
+        "nomi_ru": "",
+        "manzil": "Yangi Yunusobod ko'chasi",
+        "telefon": "+998 95 1967472",
+        "ish_vaqti": "24/7",
+        "lat": 41.368393,
+        "lon": 69.307896,
+        "google": "https://www.google.com/maps?q=41.3683929,69.307896",
+        "yandex": "https://yandex.uz/maps/?pt=69.307896,41.3683929&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5722758026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.290868,
+          41.350856
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Лаборатория ИнтерМед  Частная клиника",
+        "nomi_ru": "",
+        "manzil": "10А",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.350856,
+        "lon": 69.290868,
+        "google": "https://www.google.com/maps?q=41.3508562,69.2908678",
+        "yandex": "https://yandex.uz/maps/?pt=69.2908678,41.3508562&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/11112421905"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.286407,
+          41.368554
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "ЛОР 24/7",
+        "nomi_ru": "Круглосуточный ЛОР 24/7",
+        "manzil": "",
+        "telefon": "+998955152407",
+        "ish_vaqti": "24/7",
+        "lat": 41.368554,
+        "lon": 69.286407,
+        "google": "https://www.google.com/maps?q=41.3685543,69.2864071",
+        "yandex": "https://yandex.uz/maps/?pt=69.2864071,41.3685543&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/7824089085"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.296752,
+          41.362541
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Мед Лайн",
+        "nomi_ru": "",
+        "manzil": "Улкаобод улица, 9",
+        "telefon": "",
+        "ish_vaqti": "Mo-Sa 07:30-16:30",
+        "lat": 41.362541,
+        "lon": 69.296752,
+        "google": "https://www.google.com/maps?q=41.3625411,69.2967522",
+        "yandex": "https://yandex.uz/maps/?pt=69.2967522,41.3625411&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6517801485"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.310543,
+          41.374406
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Медцентр Nurshah",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.374406,
+        "lon": 69.310543,
+        "google": "https://www.google.com/maps?q=41.3744056,69.3105426",
+        "yandex": "https://yandex.uz/maps/?pt=69.3105426,41.3744056&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4417419199"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.2846,
+          41.368092
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "ООО Микдор",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.368092,
+        "lon": 69.2846,
+        "google": "https://www.google.com/maps?q=41.3680922,69.2846",
+        "yandex": "https://yandex.uz/maps/?pt=69.2846,41.3680922&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4935390521"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.275126,
+          41.364009
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Шифо Нур",
+        "nomi_ru": "",
+        "manzil": "Мойкурган улица, 100",
+        "telefon": "+998 71 221-13-13",
+        "ish_vaqti": "Su-Fr 08:00-19:00",
+        "lat": 41.364009,
+        "lon": 69.275126,
+        "google": "https://www.google.com/maps?q=41.3640086,69.2751261",
+        "yandex": "https://yandex.uz/maps/?pt=69.2751261,41.3640086&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4901015421"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.281841,
+          41.379265
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "DOCTOR LOR SERVICE",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998712259076",
+        "ish_vaqti": "",
+        "lat": 41.379265,
+        "lon": 69.281841,
+        "google": "https://www.google.com/maps?q=41.3792646,69.2818411",
+        "yandex": "https://yandex.uz/maps/?pt=69.2818411,41.3792646&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4642370791"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.273682,
+          41.312104
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Labnet",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998 90 004 55 57",
+        "ish_vaqti": "Mo-Sa 08:00-17:00",
+        "lat": 41.312104,
+        "lon": 69.273682,
+        "google": "https://www.google.com/maps?q=41.312104,69.2736823",
+        "yandex": "https://yandex.uz/maps/?pt=69.2736823,41.312104&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/10230944909"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.282725,
+          41.328255
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Lor Plus Service",
+        "nomi_ru": "\"Lor Plyus Service\"",
+        "manzil": "Amir Temur shoh ko'chasi, 84",
+        "telefon": "+998712353804",
+        "ish_vaqti": "24/7",
+        "lat": 41.328255,
+        "lon": 69.282725,
+        "google": "https://www.google.com/maps?q=41.3282548,69.2827245",
+        "yandex": "https://yandex.uz/maps/?pt=69.2827245,41.3282548&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4406611090"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.293684,
+          41.371994
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Neuro cardio medic",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998 90 004 40 50;+998 95 090 40 50;+998 99 000 49 38;+998 99 004 40 50;+998 99 538 03 03",
+        "ish_vaqti": "24/7",
+        "lat": 41.371994,
+        "lon": 69.293684,
+        "google": "https://www.google.com/maps?q=41.3719941,69.2936843",
+        "yandex": "https://yandex.uz/maps/?pt=69.2936843,41.3719941&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/11919761689"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.290617,
+          41.326466
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Otalaringolog",
+        "nomi_ru": "Отоларинголог",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.326466,
+        "lon": 69.290617,
+        "google": "https://www.google.com/maps?q=41.326466,69.2906174",
+        "yandex": "https://yandex.uz/maps/?pt=69.2906174,41.326466&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/1643917412"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.281033,
+          41.32912
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Атлант клиника",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.32912,
+        "lon": 69.281033,
+        "google": "https://www.google.com/maps?q=41.3291201,69.2810331",
+        "yandex": "https://yandex.uz/maps/?pt=69.2810331,41.3291201&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5589717521"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.29475,
+          41.36463
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Диагностический центр \"Delta\"",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.36463,
+        "lon": 69.29475,
+        "google": "https://www.google.com/maps?q=41.3646301,69.2947504",
+        "yandex": "https://yandex.uz/maps/?pt=69.2947504,41.3646301&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4217407523"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.287767,
+          41.362678
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Личный доктор",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998 99 052 50 99;+998 99 808 06 66",
+        "ish_vaqti": "24/7",
+        "lat": 41.362678,
+        "lon": 69.287767,
+        "google": "https://www.google.com/maps?q=41.3626781,69.2877674",
+        "yandex": "https://yandex.uz/maps/?pt=69.2877674,41.3626781&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/11397485158"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.318712,
+          41.349783
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Логопеды Узбекистана",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "+998 77 017 28 38;+998 90 043 11 51;+998 94 583 00 14;+998 97 736 24 05",
+        "ish_vaqti": "Mo-Sa 08:00-17:00",
+        "lat": 41.349783,
+        "lon": 69.318712,
+        "google": "https://www.google.com/maps?q=41.349783,69.318712",
+        "yandex": "https://yandex.uz/maps/?pt=69.318712,41.349783&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/11397485157"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.276323,
+          41.321014
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "ЛОР",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.321014,
+        "lon": 69.276323,
+        "google": "https://www.google.com/maps?q=41.3210144,69.276323",
+        "yandex": "https://yandex.uz/maps/?pt=69.276323,41.3210144&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4950302122"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.321249,
+          41.352724
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "ЛОР",
+        "nomi_ru": "",
+        "manzil": "Тепакурган улица, 48",
+        "telefon": "+998712891291",
+        "ish_vaqti": "",
+        "lat": 41.352724,
+        "lon": 69.321249,
+        "google": "https://www.google.com/maps?q=41.3527235,69.3212486",
+        "yandex": "https://yandex.uz/maps/?pt=69.3212486,41.3527235&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/6440709095"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.332718,
+          41.352467
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Республиканский скрининг-центр",
+        "nomi_ru": "",
+        "manzil": "Bogishamol 3-o'tish ko'chasi, 5",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.352467,
+        "lon": 69.332718,
+        "google": "https://www.google.com/maps?q=41.3524672,69.3327181",
+        "yandex": "https://yandex.uz/maps/?pt=69.3327181,41.3524672&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/137995825"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.308449,
+          41.368536
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "сэржэм",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "Mo-Su 08:00-17:00",
+        "lat": 41.368536,
+        "lon": 69.308449,
+        "google": "https://www.google.com/maps?q=41.3685357,69.3084493",
+        "yandex": "https://yandex.uz/maps/?pt=69.3084493,41.3685357&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/2832929131"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.284756,
+          41.32287
+        ]
+      },
+      "properties": {
+        "turi": "Shifokor xonasi",
+        "nomi": "Туберкулезный диспансер",
+        "nomi_ru": "",
+        "manzil": "Ниёзбек йули 3-й проезд, 4a",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.32287,
+        "lon": 69.284756,
+        "google": "https://www.google.com/maps?q=41.3228704,69.284756",
+        "yandex": "https://yandex.uz/maps/?pt=69.284756,41.3228704&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/32973450"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.22385,
+          41.328211
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "35 avtobus: 5-son bolalar yuqumli kasalliklar shifoxonasi => Mukarram Turg`unboeva ko`chasi",
+        "nomi_ru": "Автобус 35: Детская инфекционная больница № 5 => Улица Мукаррам Тургунбаевой",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "5:15-21:45",
+        "lat": 41.328211,
+        "lon": 69.22385,
+        "google": "https://www.google.com/maps?q=41.3282108,69.2238501",
+        "yandex": "https://yandex.uz/maps/?pt=69.2238501,41.3282108&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/relation/20458169"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.231548,
+          41.32846
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "35 avtobus: Mukarram Turg`unboeva ko`chasi => 5-son bolalar yuqumli kasalliklar shifoxonasi",
+        "nomi_ru": "Автобус 35: Улица Мукаррам Тургунбаевой => Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "5:15-21:45",
+        "lat": 41.32846,
+        "lon": 69.231548,
+        "google": "https://www.google.com/maps?q=41.3284601,69.2315478",
+        "yandex": "https://yandex.uz/maps/?pt=69.2315478,41.3284601&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/relation/20458168"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.298334,
+          41.362901
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "5-sonli bolalar kasalxonasi",
+        "nomi_ru": "Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.362901,
+        "lon": 69.298334,
+        "google": "https://www.google.com/maps?q=41.3629007,69.2983336",
+        "yandex": "https://yandex.uz/maps/?pt=69.2983336,41.3629007&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4445666611"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.298891,
+          41.363614
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "5-sonli bolalar kasalxonasi",
+        "nomi_ru": "Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.363614,
+        "lon": 69.298891,
+        "google": "https://www.google.com/maps?q=41.3636144,69.2988913",
+        "yandex": "https://yandex.uz/maps/?pt=69.2988913,41.3636144&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4445666612"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.297656,
+          41.363453
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "5-sonli bolalar kasalxonasi",
+        "nomi_ru": "Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.363453,
+        "lon": 69.297656,
+        "google": "https://www.google.com/maps?q=41.3634528,69.2976561",
+        "yandex": "https://yandex.uz/maps/?pt=69.2976561,41.3634528&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4445666613"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.297737,
+          41.363534
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "5-sonli bolalar kasalxonasi",
+        "nomi_ru": "Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.363534,
+        "lon": 69.297737,
+        "google": "https://www.google.com/maps?q=41.3635336,69.2977372",
+        "yandex": "https://yandex.uz/maps/?pt=69.2977372,41.3635336&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13342647780"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.298768,
+          41.363682
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "5-sonli bolalar kasalxonasi",
+        "nomi_ru": "Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.363682,
+        "lon": 69.298768,
+        "google": "https://www.google.com/maps?q=41.3636821,69.2987679",
+        "yandex": "https://yandex.uz/maps/?pt=69.2987679,41.3636821&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/13342647782"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.298193,
+          41.362846
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "5-sonli bolalar kasalxonasi",
+        "nomi_ru": "Детская инфекционная больница № 5",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.362846,
+        "lon": 69.298193,
+        "google": "https://www.google.com/maps?q=41.362846,69.2981932",
+        "yandex": "https://yandex.uz/maps/?pt=69.2981932,41.362846&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/way/1484702002"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.296426,
+          41.361323
+        ]
+      },
+      "properties": {
+        "turi": "Boshqa tibbiyot muassasasi",
+        "nomi": "План Больницы",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.361323,
+        "lon": 69.296426,
+        "google": "https://www.google.com/maps?q=41.3613227,69.2964263",
+        "yandex": "https://yandex.uz/maps/?pt=69.2964263,41.3613227&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4688726815"
+      }
+    }
+  ]
+}
