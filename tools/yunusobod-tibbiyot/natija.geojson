@@ -6,29 +6,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          69.307935,
-          41.368469
-        ]
-      },
-      "properties": {
-        "turi": "Tug'ruqxona / perinatal markaz",
-        "nomi": "Biogen Med",
-        "nomi_ru": "",
-        "manzil": "Yangi Yunusobod ko'chasi",
-        "telefon": "+998 71 230 74 72",
-        "ish_vaqti": "24/7",
-        "lat": 41.368469,
-        "lon": 69.307935,
-        "google": "https://www.google.com/maps?q=41.368469,69.3079346",
-        "yandex": "https://yandex.uz/maps/?pt=69.3079346,41.368469&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/5356933321"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           69.285997,
           41.353314
         ]
@@ -183,29 +160,6 @@
         "google": "https://www.google.com/maps?q=41.3317624,69.2815891",
         "yandex": "https://yandex.uz/maps/?pt=69.2815891,41.3317624&z=17&l=map",
         "osm": "https://www.openstreetmap.org/way/469499483"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.300286,
-          41.36039
-        ]
-      },
-      "properties": {
-        "turi": "Shifoxona (kasalxona)",
-        "nomi": "Virusologiya ilmiy-tekshirish instituti",
-        "nomi_ru": "НИИ вирусологии",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.36039,
-        "lon": 69.300286,
-        "google": "https://www.google.com/maps?q=41.3603898,69.3002864",
-        "yandex": "https://yandex.uz/maps/?pt=69.3002864,41.3603898&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/relation/9576370"
       }
     },
     {
@@ -466,351 +420,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          69.311091,
-          41.37064
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.37064,
-        "lon": 69.311091,
-        "google": "https://www.google.com/maps?q=41.3706397,69.3110914",
-        "yandex": "https://yandex.uz/maps/?pt=69.3110914,41.3706397&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/4659411634"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.312431,
-          41.370112
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.370112,
-        "lon": 69.312431,
-        "google": "https://www.google.com/maps?q=41.3701121,69.3124308",
-        "yandex": "https://yandex.uz/maps/?pt=69.3124308,41.3701121&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/4659411635"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.310251,
-          41.369569
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.369569,
-        "lon": 69.310251,
-        "google": "https://www.google.com/maps?q=41.3695692,69.3102508",
-        "yandex": "https://yandex.uz/maps/?pt=69.3102508,41.3695692&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/10803349295"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.311853,
-          41.369186
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.369186,
-        "lon": 69.311853,
-        "google": "https://www.google.com/maps?q=41.369186,69.3118532",
-        "yandex": "https://yandex.uz/maps/?pt=69.3118532,41.369186&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13339363592"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.311227,
-          41.370693
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.370693,
-        "lon": 69.311227,
-        "google": "https://www.google.com/maps?q=41.3706928,69.3112274",
-        "yandex": "https://yandex.uz/maps/?pt=69.3112274,41.3706928&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13339363593"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.312498,
-          41.370002
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.370002,
-        "lon": 69.312498,
-        "google": "https://www.google.com/maps?q=41.3700023,69.3124982",
-        "yandex": "https://yandex.uz/maps/?pt=69.3124982,41.3700023&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13339363594"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.311727,
-          41.369152
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.369152,
-        "lon": 69.311727,
-        "google": "https://www.google.com/maps?q=41.3691518,69.311727",
-        "yandex": "https://yandex.uz/maps/?pt=69.311727,41.3691518&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/way/706221697"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.3102,
-          41.369713
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.369713,
-        "lon": 69.3102,
-        "google": "https://www.google.com/maps?q=41.3697126,69.3101999",
-        "yandex": "https://yandex.uz/maps/?pt=69.3101999,41.3697126&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/way/1254344624"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.311284,
-          41.369892
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "12-sonli poliklinika",
-        "nomi_ru": "Поликлиника № 12",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.369892,
-        "lon": 69.311284,
-        "google": "https://www.google.com/maps?q=41.3698924,69.3112837",
-        "yandex": "https://yandex.uz/maps/?pt=69.3112837,41.3698924&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/relation/19896208"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.292853,
-          41.332464
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "5-sonli stomatologiya poliklinikasi",
-        "nomi_ru": "Стоматологическая поликлиника №5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.332464,
-        "lon": 69.292853,
-        "google": "https://www.google.com/maps?q=41.3324638,69.292853",
-        "yandex": "https://yandex.uz/maps/?pt=69.292853,41.3324638&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/5995451139"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.291829,
-          41.332012
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "5-sonli stomatologiya poliklinikasi",
-        "nomi_ru": "Стоматологическая поликлиника №5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.332012,
-        "lon": 69.291829,
-        "google": "https://www.google.com/maps?q=41.3320125,69.2918293",
-        "yandex": "https://yandex.uz/maps/?pt=69.2918293,41.3320125&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/5995451145"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.291017,
-          41.332765
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "5-sonli stomatologiya poliklinikasi",
-        "nomi_ru": "Стоматологическая поликлиника №5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.332765,
-        "lon": 69.291017,
-        "google": "https://www.google.com/maps?q=41.3327649,69.2910167",
-        "yandex": "https://yandex.uz/maps/?pt=69.2910167,41.3327649&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/6796401488"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.292252,
-          41.33315
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "5-sonli stomatologiya poliklinikasi",
-        "nomi_ru": "Стоматологическая поликлиника №5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.33315,
-        "lon": 69.292252,
-        "google": "https://www.google.com/maps?q=41.3331504,69.2922521",
-        "yandex": "https://yandex.uz/maps/?pt=69.2922521,41.3331504&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/6796401489"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.292312,
-          41.333104
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "5-sonli stomatologiya poliklinikasi",
-        "nomi_ru": "Стоматологическая поликлиника №5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.333104,
-        "lon": 69.292312,
-        "google": "https://www.google.com/maps?q=41.3331043,69.2923124",
-        "yandex": "https://yandex.uz/maps/?pt=69.2923124,41.3331043&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13738367999"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.291092,
-          41.332863
-        ]
-      },
-      "properties": {
-        "turi": "Poliklinika / oilaviy poliklinika",
-        "nomi": "5-sonli stomatologiya poliklinikasi",
-        "nomi_ru": "Стоматологическая поликлиника №5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.332863,
-        "lon": 69.291092,
-        "google": "https://www.google.com/maps?q=41.3328631,69.291092",
-        "yandex": "https://yandex.uz/maps/?pt=69.291092,41.3328631&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13787603473"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           69.272122,
           41.370713
         ]
@@ -850,6 +459,29 @@
         "google": "https://www.google.com/maps?q=41.3319476,69.2827327",
         "yandex": "https://yandex.uz/maps/?pt=69.2827327,41.3319476&z=17&l=map",
         "osm": "https://www.openstreetmap.org/node/5124432348"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.271969,
+          41.370327
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Детская Стоматологическая Поликлиника №2",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "2244618, 2245462, 2211281",
+        "ish_vaqti": "7:30-19:00",
+        "lat": 41.370327,
+        "lon": 69.271969,
+        "google": "https://www.google.com/maps?q=41.3703269,69.2719694",
+        "yandex": "https://yandex.uz/maps/?pt=69.2719694,41.3703269&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/1840727481"
       }
     },
     {
@@ -1041,6 +673,29 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          69.292687,
+          41.332825
+        ]
+      },
+      "properties": {
+        "turi": "Poliklinika / oilaviy poliklinika",
+        "nomi": "Стоматологическая поликлиника №5",
+        "nomi_ru": "",
+        "manzil": "",
+        "telefon": "",
+        "ish_vaqti": "",
+        "lat": 41.332825,
+        "lon": 69.292687,
+        "google": "https://www.google.com/maps?q=41.3328255,69.2926873",
+        "yandex": "https://yandex.uz/maps/?pt=69.2926873,41.3328255&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/4472318391"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           69.313616,
           41.377266
         ]
@@ -1195,6 +850,29 @@
         "google": "https://www.google.com/maps?q=41.3779816,69.2953924",
         "yandex": "https://yandex.uz/maps/?pt=69.2953924,41.3779816&z=17&l=map",
         "osm": "https://www.openstreetmap.org/node/4423874789"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.307935,
+          41.368469
+        ]
+      },
+      "properties": {
+        "turi": "Klinika / tibbiyot markazi",
+        "nomi": "Biogen Med",
+        "nomi_ru": "",
+        "manzil": "Yangi Yunusobod ko'chasi",
+        "telefon": "+998 71 230 74 72",
+        "ish_vaqti": "24/7",
+        "lat": 41.368469,
+        "lon": 69.307935,
+        "google": "https://www.google.com/maps?q=41.368469,69.3079346",
+        "yandex": "https://yandex.uz/maps/?pt=69.3079346,41.368469&z=17&l=map",
+        "osm": "https://www.openstreetmap.org/node/5356933321"
       }
     },
     {
@@ -2092,213 +1770,6 @@
         "google": "https://www.google.com/maps?q=41.3228704,69.284756",
         "yandex": "https://yandex.uz/maps/?pt=69.284756,41.3228704&z=17&l=map",
         "osm": "https://www.openstreetmap.org/way/32973450"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.22385,
-          41.328211
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "35 avtobus: 5-son bolalar yuqumli kasalliklar shifoxonasi => Mukarram Turg`unboeva ko`chasi",
-        "nomi_ru": "Автобус 35: Детская инфекционная больница № 5 => Улица Мукаррам Тургунбаевой",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "5:15-21:45",
-        "lat": 41.328211,
-        "lon": 69.22385,
-        "google": "https://www.google.com/maps?q=41.3282108,69.2238501",
-        "yandex": "https://yandex.uz/maps/?pt=69.2238501,41.3282108&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/relation/20458169"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.231548,
-          41.32846
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "35 avtobus: Mukarram Turg`unboeva ko`chasi => 5-son bolalar yuqumli kasalliklar shifoxonasi",
-        "nomi_ru": "Автобус 35: Улица Мукаррам Тургунбаевой => Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "5:15-21:45",
-        "lat": 41.32846,
-        "lon": 69.231548,
-        "google": "https://www.google.com/maps?q=41.3284601,69.2315478",
-        "yandex": "https://yandex.uz/maps/?pt=69.2315478,41.3284601&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/relation/20458168"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.298334,
-          41.362901
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "5-sonli bolalar kasalxonasi",
-        "nomi_ru": "Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.362901,
-        "lon": 69.298334,
-        "google": "https://www.google.com/maps?q=41.3629007,69.2983336",
-        "yandex": "https://yandex.uz/maps/?pt=69.2983336,41.3629007&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/4445666611"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.298891,
-          41.363614
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "5-sonli bolalar kasalxonasi",
-        "nomi_ru": "Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.363614,
-        "lon": 69.298891,
-        "google": "https://www.google.com/maps?q=41.3636144,69.2988913",
-        "yandex": "https://yandex.uz/maps/?pt=69.2988913,41.3636144&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/4445666612"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.297656,
-          41.363453
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "5-sonli bolalar kasalxonasi",
-        "nomi_ru": "Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.363453,
-        "lon": 69.297656,
-        "google": "https://www.google.com/maps?q=41.3634528,69.2976561",
-        "yandex": "https://yandex.uz/maps/?pt=69.2976561,41.3634528&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/4445666613"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.297737,
-          41.363534
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "5-sonli bolalar kasalxonasi",
-        "nomi_ru": "Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.363534,
-        "lon": 69.297737,
-        "google": "https://www.google.com/maps?q=41.3635336,69.2977372",
-        "yandex": "https://yandex.uz/maps/?pt=69.2977372,41.3635336&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13342647780"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.298768,
-          41.363682
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "5-sonli bolalar kasalxonasi",
-        "nomi_ru": "Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.363682,
-        "lon": 69.298768,
-        "google": "https://www.google.com/maps?q=41.3636821,69.2987679",
-        "yandex": "https://yandex.uz/maps/?pt=69.2987679,41.3636821&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/13342647782"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.298193,
-          41.362846
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "5-sonli bolalar kasalxonasi",
-        "nomi_ru": "Детская инфекционная больница № 5",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.362846,
-        "lon": 69.298193,
-        "google": "https://www.google.com/maps?q=41.362846,69.2981932",
-        "yandex": "https://yandex.uz/maps/?pt=69.2981932,41.362846&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/way/1484702002"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.296426,
-          41.361323
-        ]
-      },
-      "properties": {
-        "turi": "Boshqa tibbiyot muassasasi",
-        "nomi": "План Больницы",
-        "nomi_ru": "",
-        "manzil": "",
-        "telefon": "",
-        "ish_vaqti": "",
-        "lat": 41.361323,
-        "lon": 69.296426,
-        "google": "https://www.google.com/maps?q=41.3613227,69.2964263",
-        "yandex": "https://yandex.uz/maps/?pt=69.2964263,41.3613227&z=17&l=map",
-        "osm": "https://www.openstreetmap.org/node/4688726815"
       }
     }
   ]
