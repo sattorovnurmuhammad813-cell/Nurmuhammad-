@@ -1,0 +1,29 @@
+name: Yunusobod tibbiyot ro'yxati
+
+on:
+  push:
+    branches: [ccr-550f103a-p63cbt]
+    paths:
+      - "tools/yunusobod-tibbiyot/fetch.mjs"
+      - ".github/workflows/yunusobod-tibbiyot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/yunusobod-tibbiyot/fetch.mjs
+      - name: Natijani commit qilish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/yunusobod-tibbiyot/natija.*
+          git commit -m "Yunusobod tibbiyot muassasalari: natija yangilandi" || echo "O'zgarish yo'q"
+          git push
